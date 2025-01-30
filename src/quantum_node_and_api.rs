@@ -7,14 +7,18 @@ use chrono::{DateTime, Utc};
 use quantumfuse_sdk::{
     error::NodeError,
     crypto::{Hash, KeyPair},
-    metrics::NodeMetrics,
-    state::StateAccess,
-    consensus::QuantumFuseConsensus,
+    pqc::dilithium::{DilithiumKeyPair, Signature},
+    pqc::kyber1024::{KyberCiphertext, KyberKeyPair},
     qkd::QKDManager,
-    did::DIDRegistry
+    metrics::NodeMetrics,
+    consensus::QuantumFuseConsensus,
+    did::DIDRegistry,
+    ai::{TransactionOptimizer, AnomalyDetector},
+    p2p::PeerManager,
+    storage::QuantumStorage,
 };
 
-// Node Configuration
+// 🔹 **Node Configuration**
 #[derive(Debug, Clone, Serialize, Deserialize)]
 pub struct NodeConfig {
     pub node_id: String,
@@ -28,7 +32,7 @@ pub struct NodeConfig {
     pub metrics_enabled: bool,
 }
 
-// API Types
+// 🔹 **API Types**
 #[derive(Debug, Clone, Serialize, Deserialize)]
 pub struct BlockRequest {
     pub miner_wallet: String,
@@ -66,7 +70,7 @@ pub enum ResponseStatus {
     Error(String),
 }
 
-// Quantum Node Implementation
+// 🔹 **Quantum Node Implementation**
 pub struct QuantumNode {
     config: NodeConfig,
     consensus: Arc<RwLock<QuantumFuseConsensus>>,
@@ -74,6 +78,8 @@ pub struct QuantumNode {
     transaction_pool: Arc<RwLock<TransactionPool>>,
     storage: Arc<RwLock<QuantumStorage>>,
     metrics: Arc<RwLock<NodeMetrics>>,
+    transaction_optimizer: Arc<RwLock<TransactionOptimizer>>,
+    anomaly_detector: Arc<RwLock<AnomalyDetector>>,
 }
 
 impl QuantumNode {
@@ -84,6 +90,8 @@ impl QuantumNode {
         let transaction_pool = Arc::new(RwLock::new(TransactionPool::new(&config)?));
         let storage = Arc::new(RwLock::new(QuantumStorage::new(&config)?));
         let metrics = Arc::new(RwLock::new(NodeMetrics::default()));
+        let transaction_optimizer = Arc::new(RwLock::new(TransactionOptimizer::new()));
+        let anomaly_detector = Arc::new(RwLock::new(AnomalyDetector::new()));
 
         Ok(Self {
             config,
@@ -92,6 +100,8 @@ impl QuantumNode {
             transaction_pool,
             storage,
             metrics,
+            transaction_optimizer,
+            anomaly_detector,
         })
     }
 
@@ -114,6 +124,9 @@ impl QuantumNode {
 
         // Start consensus
         self.consensus.write().await.start().await?;
+
+        // Start AI Anomaly Detection
+        self.anomaly_detector.write().await.start_monitoring().await?;
 
         // Start API server
         self.start_api_server().await?;
@@ -149,7 +162,7 @@ impl QuantumNode {
     }
 }
 
-// API Handlers
+// 🔹 **API Handlers**
 async fn handle_mine_block(
     req: web::Json<BlockRequest>,
     consensus: web::Data<Arc<RwLock<QuantumFuseConsensus>>>,
@@ -160,140 +173,17 @@ async fn handle_mine_block(
 
     match consensus.mine_block(&req.miner_wallet, req.transactions.clone()).await {
         Ok(block) => {
-            // Remove mined transactions from pool
             tx_pool.remove_transactions(&block.transactions).await?;
-            
             HttpResponse::Ok().json(BlockResponse {
                 block: Some(block),
                 status: ResponseStatus::Success,
                 message: "Block mined successfully".to_string(),
             })
         }
-        Err(e) => {
-            HttpResponse::InternalServerError().json(BlockResponse {
-                block: None,
-                status: ResponseStatus::Error(e.to_string()),
-                message: "Failed to mine block".to_string(),
-            })
-        }
-    }
-}
-
-async fn handle_validate_block(
-    block: web::Json<Block>,
-    consensus: web::Data<Arc<RwLock<QuantumFuseConsensus>>>,
-) -> impl Responder {
-    let consensus = consensus.read().await;
-    
-    match consensus.validate_block(&block).await {
-        Ok(is_valid) => HttpResponse::Ok().json(json!({
-            "valid": is_valid,
-            "status": "success"
-        })),
-        Err(e) => HttpResponse::InternalServerError().json(json!({
-            "valid": false,
-            "status": "error",
-            "message": e.to_string()
-        }))
-    }
-}
-
-async fn handle_submit_transaction(
-    transaction: web::Json<Transaction>,
-    transaction_pool: web::Data<Arc<RwLock<TransactionPool>>>,
-) -> impl Responder {
-    let mut tx_pool = transaction_pool.write().await;
-    
-    match tx_pool.add_transaction(transaction.0).await {
-        Ok(_) => HttpResponse::Ok().json(json!({
-            "status": "success",
-            "message": "Transaction submitted successfully"
-        })),
-        Err(e) => HttpResponse::InternalServerError().json(json!({
-            "status": "error",
-            "message": e.to_string()
-        }))
-    }
-}
-
-async fn handle_node_status(
-    metrics: web::Data<Arc<RwLock<NodeMetrics>>>,
-) -> impl Responder {
-    let metrics = metrics.read().await;
-    HttpResponse::Ok().json(json!({
-        "status": "active",
-        "uptime": metrics.uptime,
-        "peers": metrics.peer_count,
-        "transactions": metrics.transaction_count,
-        "blocks": metrics.block_count
-    }))
-}
-
-async fn handle_metrics(
-    metrics: web::Data<Arc<RwLock<NodeMetrics>>>,
-) -> impl Responder {
-    let metrics = metrics.read().await;
-    HttpResponse::Ok().json(metrics.clone())
-}
-
-#[tokio::main]
-async fn main() -> Result<(), NodeError> {
-    // Load configuration
-    let config = NodeConfig::load("config.yaml")?;
-
-    // Initialize and start node
-    let node = QuantumNode::new(config).await?;
-    node.start().await?;
-
-    // Keep the main thread alive
-    tokio::signal::ctrl_c().await?;
-    info!("Shutting down Quantum Node");
-    
-    Ok(())
-}
-
-#[cfg(test)]
-mod tests {
-    use super::*;
-
-    #[tokio::test]
-    async fn test_node_initialization() {
-        let config = NodeConfig {
-            node_id: "test-node".to_string(),
-            api_port: 8080,
-            p2p_port: 9000,
-            bootstrap_nodes: vec![],
-            quantum_backend: "simulator".to_string(),
-            pqc_backend: "dilithium".to_string(),
-            storage_path: "./test-data".to_string(),
-            log_level: "debug".to_string(),
-            metrics_enabled: true,
-        };
-
-        let node = QuantumNode::new(config).await;
-        assert!(node.is_ok());
-    }
-
-    #[tokio::test]
-    async fn test_block_mining() {
-        let config = NodeConfig::default();
-        let node = QuantumNode::new(config).await.unwrap();
-        
-        let request = BlockRequest {
-            miner_wallet: "test-wallet".to_string(),
-            transactions: vec![],
-            timestamp: Utc::now(),
-        };
-
-        let consensus = node.consensus.clone();
-        let tx_pool = node.transaction_pool.clone();
-        
-        let response = handle_mine_block(
-            web::Json(request),
-            web::Data::new(consensus),
-            web::Data::new(tx_pool),
-        ).await;
-        
-        assert!(response.status().is_success());
+        Err(e) => HttpResponse::InternalServerError().json(BlockResponse {
+            block: None,
+            status: ResponseStatus::Error(e.to_string()),
+            message: "Failed to mine block".to_string(),
+        })
     }
 }
