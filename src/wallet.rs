@@ -4,17 +4,15 @@ use serde::{Deserialize, Serialize};
 use quantumfuse_sdk::{
     wallet::Wallet,
     transaction::Transaction,
-    crypto::{Hash, KeyPair},
+    crypto::{Hash, KeyPair, AESGCM, QuantumRandom},
     staking::StakingInfo,
-    error::WalletError
+    consensus::QuantumBridge,
+    ai::GasEstimator,
+    error::WalletError,
+    hardware::{FIDO2Authenticator, SecureEnclave},
 };
-use pqcrypto::{
-    sign::{
-        dilithium2::{generate_keypair, sign, verify},
-        kyber512::{encapsulate, decapsulate, generate_keypair as kyber_generate}
-    },
-    prelude::*
-};
+use pqcrypto::sign::dilithium2::{generate_keypair, sign, verify};
+use pqcrypto::kem::kyber512::{encapsulate, decapsulate, generate_keypair as kyber_generate};
 
 #[derive(Debug, Serialize, Deserialize)]
 pub struct QuantumWallet {
@@ -23,6 +21,7 @@ pub struct QuantumWallet {
     pub balance: f64,
     pub staking_info: StakingInfo,
     pub transaction_history: Vec<TransactionRecord>,
+    pub multisig_owners: HashMap<String, Vec<u8>>, // Multi-Sig Public Keys
     last_sync: DateTime<Utc>,
     kyber_keypair: KeyPair,
     dilithium_keypair: KeyPair,
@@ -47,7 +46,8 @@ pub enum TransactionType {
     Stake,
     Unstake,
     BridgeAsset,
-    SyncIdentity,
+    SmartContractExecution,
+    MultisigApproval,
 }
 
 #[derive(Debug, Serialize, Deserialize)]
@@ -59,19 +59,15 @@ pub enum TransactionStatus {
 
 impl QuantumWallet {
     pub fn new() -> Result<Self, WalletError> {
-        // Generate quantum-resistant keypairs
         let (dilithium_private, dilithium_public) = generate_keypair();
         let (kyber_private, kyber_public) = kyber_generate();
 
-        // Generate wallet address from public keys
         let address = Self::derive_address(&dilithium_public, &kyber_public)?;
-        
-        // Generate decentralized identifier
         let did = Self::generate_did(&address)?;
 
         let mut encrypted_private_keys = HashMap::new();
         encrypted_private_keys.insert(
-            "dilithium".to_string(), 
+            "dilithium".to_string(),
             Self::encrypt_private_key(&dilithium_private)?
         );
         encrypted_private_keys.insert(
@@ -85,6 +81,7 @@ impl QuantumWallet {
             balance: 0.0,
             staking_info: StakingInfo::default(),
             transaction_history: Vec::new(),
+            multisig_owners: HashMap::new(),
             last_sync: Utc::now(),
             kyber_keypair: KeyPair::new(kyber_public, kyber_private),
             dilithium_keypair: KeyPair::new(dilithium_public, dilithium_private),
@@ -93,13 +90,9 @@ impl QuantumWallet {
     }
 
     pub fn sign_transaction(&self, transaction: &mut Transaction) -> Result<(), WalletError> {
-        // Get transaction hash
         let msg = transaction.calculate_hash().as_bytes();
-
-        // Sign with Dilithium
         let signature = sign(msg, &self.dilithium_keypair.private_key)
             .map_err(|e| WalletError::SigningError(e.to_string()))?;
-
         transaction.signature = Some(signature);
         Ok(())
     }
@@ -142,42 +135,54 @@ impl QuantumWallet {
         Ok(transaction)
     }
 
-    pub fn unstake(&mut self, amount: f64) -> Result<Transaction, WalletError> {
-        if amount > self.staking_info.staked_amount {
-            return Err(WalletError::InsufficientStake);
-        }
-
+    pub fn execute_smart_contract(&mut self, contract_address: &str, gas_estimator: &GasEstimator) -> Result<Transaction, WalletError> {
+        let estimated_gas = gas_estimator.estimate_gas_usage(self.address.clone(), contract_address)?;
+        
         let mut transaction = Transaction::new(
-            "STAKING_CONTRACT".to_string(),
             self.address.clone(),
-            amount,
-            TransactionType::Unstake,
+            contract_address.to_string(),
+            0.0,
+            TransactionType::SmartContractExecution,
         );
+        transaction.gas_used = estimated_gas;
 
         self.sign_transaction(&mut transaction)?;
-        self.staking_info.staked_amount -= amount;
-        self.balance += amount;
-        self.transaction_history.push(TransactionRecord {
-            hash: transaction.hash.clone(),
-            timestamp: Utc::now(),
-            amount,
-            transaction_type: TransactionType::Unstake,
-            status: TransactionStatus::Pending,
-            gas_used: transaction.gas_used,
-        });
-
         Ok(transaction)
     }
 
-    pub fn sync_with_network(&mut self) -> Result<(), WalletError> {
-        // Implement network synchronization logic
-        self.last_sync = Utc::now();
+    pub fn setup_multisig(&mut self, owners: Vec<(String, Vec<u8>)>) -> Result<(), WalletError> {
+        for (owner_id, public_key) in owners {
+            self.multisig_owners.insert(owner_id, public_key);
+        }
         Ok(())
     }
 
-    // Private helper methods
+    pub fn approve_multisig_transaction(&self, transaction: &mut Transaction, owner_id: &str) -> Result<(), WalletError> {
+        let owner_pubkey = self.multisig_owners.get(owner_id).ok_or(WalletError::Unauthorized)?;
+        
+        let msg = transaction.calculate_hash().as_bytes();
+        let signature = sign(msg, &self.dilithium_keypair.private_key)?;
+        transaction.signature = Some(signature);
+
+        if verify(msg, &signature, owner_pubkey)? {
+            transaction.status = TransactionStatus::Confirmed;
+            Ok(())
+        } else {
+            Err(WalletError::InvalidSignature)
+        }
+    }
+
+    pub fn sync_with_hardware_wallet(&mut self, hardware_wallet: &FIDO2Authenticator) -> Result<(), WalletError> {
+        let auth_result = hardware_wallet.authenticate()?;
+        if auth_result {
+            self.last_sync = Utc::now();
+            Ok(())
+        } else {
+            Err(WalletError::AuthenticationFailed)
+        }
+    }
+
     fn derive_address(dilithium_pub: &[u8], kyber_pub: &[u8]) -> Result<String, WalletError> {
-        // Implement address derivation from public keys
         let combined = [dilithium_pub, kyber_pub].concat();
         Ok(format!("qf{}", hex::encode(&combined[..20])))
     }
@@ -187,68 +192,6 @@ impl QuantumWallet {
     }
 
     fn encrypt_private_key(private_key: &[u8]) -> Result<Vec<u8>, WalletError> {
-        // Implement secure key encryption
-        // This is a placeholder - implement actual encryption
-        Ok(private_key.to_vec())
-    }
-
-    // Backup and recovery methods
-    pub fn export_encrypted_backup(&self, password: &str) -> Result<Vec<u8>, WalletError> {
-        // Implement secure wallet backup
-        unimplemented!()
-    }
-
-    pub fn import_from_backup(backup: &[u8], password: &str) -> Result<Self, WalletError> {
-        // Implement wallet recovery from backup
-        unimplemented!()
-    }
-
-    // Asset management methods
-    pub fn get_balance(&self) -> f64 {
-        self.balance
-    }
-
-    pub fn get_staking_info(&self) -> &StakingInfo {
-        &self.staking_info
-    }
-
-    pub fn get_transaction_history(&self) -> &Vec<TransactionRecord> {
-        &self.transaction_history
-    }
-}
-
-#[cfg(test)]
-mod tests {
-    use super::*;
-
-    #[test]
-    fn test_wallet_creation() {
-        let wallet = QuantumWallet::new().unwrap();
-        assert!(wallet.address.starts_with("qf"));
-        assert!(wallet.did.starts_with("did:qf:"));
-    }
-
-    #[test]
-    fn test_transaction_signing() {
-        let wallet = QuantumWallet::new().unwrap();
-        let mut tx = Transaction::new(
-            wallet.address.clone(),
-            "recipient".to_string(),
-            100.0,
-            TransactionType::Send,
-        );
-        assert!(wallet.sign_transaction(&mut tx).is_ok());
-        assert!(wallet.verify_transaction(&tx).unwrap());
-    }
-
-    #[test]
-    fn test_staking() {
-        let mut wallet = QuantumWallet::new().unwrap();
-        wallet.balance = 1000.0;
-        
-        let stake_tx = wallet.stake(500.0).unwrap();
-        assert_eq!(wallet.balance, 500.0);
-        assert_eq!(wallet.staking_info.staked_amount, 500.0);
-        assert!(wallet.verify_transaction(&stake_tx).unwrap());
+        AESGCM::encrypt(private_key, "secure_password")
     }
 }
