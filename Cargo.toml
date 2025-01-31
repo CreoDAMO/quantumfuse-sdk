@@ -5,7 +5,7 @@ quantumfuse-sdk = { git = "https://github.com/CreoDAMO/quantumfuse-sdk" }
 substrate-api-client = "0.16.0"  # Polkadot/Substrate blockchain API
 cosmwasm-std = "2.2.0"          # Cosmos-based smart contract execution
 ethabi = "18.0.0"               # Ethereum smart contract parsing
-foundry = "0.2.0"               # Ethereum smart contract development
+foundry = "0.3.0"               # Ethereum smart contract development
 serde = { version = "1.0.217", features = ["derive"] }
 serde_json = "1.0.138"
 
