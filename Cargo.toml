@@ -1,6 +1,14 @@
-[dependencies]
+[package]
+name = "quantumfuse-sdk"
+version = "0.1.0"
+edition = "2021"
+authors = ["CreoDAMO"]
+description = "The QuantumFuse SDK: A comprehensive framework for building decentralized applications on the QuantumFuse Blockchain."
+repository = "https://github.com/CreoDAMO/quantumfuse-sdk"
+license = "Apache 2.0"
 
-# 🔹 **Core Quantum Blockchain & Smart Contracts**
+[dependencies]
+# 🔹 Core Quantum Blockchain & Smart Contracts
 quantumfuse-sdk = { git = "https://github.com/CreoDAMO/quantumfuse-sdk" }
 substrate-api-client = "0.16.0"  # Polkadot/Substrate blockchain API
 cosmwasm-std = "2.2.0"          # Cosmos-based smart contract execution
@@ -9,20 +17,20 @@ foundry = "0.3.0"               # Ethereum smart contract development
 serde = { version = "1.0.217", features = ["derive"] }
 serde_json = "1.0.138"
 
-# 🔹 **Quantum & Post-Quantum Cryptography**
+# 🔹 Quantum & Post-Quantum Cryptography
 pqcrypto = "0.18.1"             # Post-Quantum Cryptography
 ed25519-dalek = "2.1.1"         # Secure signing for transactions
 ring = "0.17.8"                 # Cryptographic operations
 blake2 = "0.10.6"               # Cryptographic hashing
 rand = "0.9.0"                  # Random number generation for cryptography
 
-# 🔹 **🧠 AI & Machine Learning for Metaverse Intelligence**
+# 🔹 🧠 AI & Machine Learning for Metaverse Intelligence
 tensorflow = "0.21.0"           # AI-driven governance & NPC automation
 tch = "0.19.0"                  # PyTorch for deep learning models
 ndarray = "0.16.1"              # High-performance numerical computing
 rust-bert = "0.23.0"            # AI language models for NPC chat & governance
 
-# 🔹 **🌐 Networking & Real-Time Communication**
+# 🔹 🌐 Networking & Real-Time Communication
 tokio = { version = "1.43.0", features = ["full"] } # Async runtime
 reqwest = { version = "0.12.12", features = ["json"] } # HTTP API for Metaverse & blockchain
 tokio-tungstenite = "0.20.1"    # Async WebSocket client/server
@@ -32,7 +40,7 @@ axum = { version = "0.8.1", features = ["ws"] }  # WebSocket-based API framework
 hyper = { version = "1.6.0", features = ["full"] }  # HTTP server
 tower = "0.5.2"                 # Asynchronous networking middleware
 
-# 🔹 **📡 Metaverse & 3D Graphics**
+# 🔹 📡 Metaverse & 3D Graphics
 bevy = "0.15.1"                 # Rust game engine for 3D rendering
 rapier3d = "0.23.0"             # 3D physics engine
 wgpu = "24.0.1"                 # High-performance GPU rendering
@@ -40,23 +48,23 @@ glam = "0.29.2"                 # Vector math for 3D environments
 nalgebra = "0.33.2"             # Linear algebra for physics & AI agents
 gltf = "1.4.1"                  # 3D model format for asset compatibility
 
-# 🔹 **🕶️ VR & AR Support**
+# 🔹 🕶️ VR & AR Support
 openxr = "0.19.0"               # OpenXR for VR/AR integration
 leptos = "0.7.5"                # WebAssembly & frontend UI for VR/AR
 web-sys = { version = "0.3.77", features = ["WebSocket"] } # WebAssembly WebSocket support
 
-# 🔹 **🖼️ NFT & Digital Asset Management**
+# 🔹 🖼️ NFT & Digital Asset Management
 ipfs-api = "0.17.0"             # IPFS decentralized storage
 ethers = "2.0.14"               # Ethereum blockchain interactions
 rust-ipfs = "0.14.1"            # Rust-native IPFS client
 
-# 🔹 **🗳️ AI-Powered Governance & Reputation**
+# 🔹 🗳️ AI-Powered Governance & Reputation
 log = "0.4.25"                  # Logging system
 env_logger = "0.11.6"           # Environment logger
 uuid = "1.12.1"                 # Unique ID generation for avatars & assets
 governance-sdk = { git = "https://github.com/CreoDAMO/quantumfuse-sdk/blob/main/src/ai-quantum_governance_system.rs" } # AI-driven governance
 
-# 🔹 **Quantum AI Dispute Resolution & Law Enforcement**
+# 🔹 Quantum AI Dispute Resolution & Law Enforcement
 smart-law = { git = "https://github.com/CreoDAMO/quantumfuse-sdk/blob/main/src/ai-quantum_governance_system.rs" } # AI-driven smart contract enforcement
 ark-std = "0.4.0"               # Standard utilities for Arkworks ecosystem
 ark-crypto-primitives = "0.4.0" # Cryptographic primitives (Merkle trees, signatures, etc.)
