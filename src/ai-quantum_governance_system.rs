@@ -1,3 +1,4 @@
+use std::collections::HashMap;
 use std::sync::Arc;
 use tokio::sync::{RwLock, mpsc};
 use chrono::{DateTime, Utc};
@@ -15,10 +16,10 @@ use quantumfuse_sdk::{
     metaverse::{MetaverseRegistry, SmartLawEnforcement},
     nft::GovernanceNFT,
     finance::{DecentralizedGovernanceBonds},
-    metrics::GovernanceMetrics
+    metrics::GovernanceMetrics,
 };
 
-// 🔹 **AI-Powered Quantum Judicial System**
+// 🔹 AI-Powered Quantum Judicial System
 #[derive(Debug)]
 pub struct QuantumJudiciary {
     cases: Arc<RwLock<HashMap<String, JudicialCase>>>,
@@ -26,7 +27,7 @@ pub struct QuantumJudiciary {
     ai_judge: Arc<RwLock<JudicialAI>>,
 }
 
-// 🔹 **Decentralized Governance Bonds (DGBs)**
+// 🔹 Decentralized Governance Bonds (DGBs)
 #[derive(Debug)]
 pub struct DecentralizedGovernanceBonds {
     bonds: Arc<RwLock<HashMap<String, GovernanceBond>>>,
@@ -42,7 +43,7 @@ pub struct GovernanceBond {
     pub interest_rate: f64,
 }
 
-// 🔹 **AI-Driven Virtual & Real-World Court System**
+// 🔹 AI-Driven Virtual & Real-World Court System
 #[derive(Debug, Clone, Serialize, Deserialize)]
 pub struct JudicialCase {
     pub case_id: String,
@@ -62,11 +63,11 @@ pub enum JudicialStatus {
     Appealed,
 }
 
-// 🔹 **Smart Contract Evolution: Adaptive Quantum Governance**
+// 🔹 Smart Contract Evolution: Adaptive Quantum Governance
 impl SmartLawEnforcement {
     pub async fn self_amend_contracts(&mut self) -> Result<(), GovernanceError> {
         let governance_rules = self.get_active_governance_policies().await?;
-        
+
         for rule in governance_rules {
             self.update_smart_contract(rule.policy_id, rule.updated_code).await?;
         }
@@ -75,18 +76,20 @@ impl SmartLawEnforcement {
     }
 }
 
-// 🔹 **Cross-Chain Interoperability for Quantum Law Enforcement**
+// 🔹 Cross-Chain Interoperability for Quantum Law Enforcement
 impl QuantumGovernance {
     pub async fn enforce_cross_chain_policy(&mut self, policy_id: &str) -> Result<(), GovernanceError> {
         let bridge = self.metaverse_registry.read().await.get_quantum_bridge()?;
-        bridge.execute_governance_policy(policy_id).await?;
 
-        Ok(())
+        if bridge.policy_exists(policy_id).await {
+            bridge.execute_governance_policy(policy_id).await?;
+            Ok(())
+        } else {
+            Err(GovernanceError::InvalidPolicy)
+        }
     }
-}
 
-// 🔹 **Reputation-Based Quantum Voting with Dynamic Scaling**
-impl QuantumGovernance {
+    // 🔹 Reputation-Based Quantum Voting with Dynamic Scaling
     pub async fn vote_with_reputation(
         &mut self,
         voter_id: &str,
@@ -94,12 +97,9 @@ impl QuantumGovernance {
         vote_type: VoteType,
     ) -> Result<(), GovernanceError> {
         let reputation_score = self.reputation_system.read().await.get_reputation(voter_id).await;
-        
-        let weighted_vote = match reputation_score {
-            r if r >= 90.0 => 3,  // Elite Governance Member
-            r if r >= 70.0 => 2,  // Trusted Community Member
-            _ => 1,  // Standard Vote
-        };
+
+        // Logarithmic scaling to prevent governance centralization
+        let weighted_vote = ((reputation_score / 10.0).log2().ceil()) as u64;
 
         let mut proposals = self.proposals.write().await;
         let proposal = proposals.get_mut(proposal_id).ok_or(GovernanceError::ProposalNotFound)?;
@@ -111,20 +111,22 @@ impl QuantumGovernance {
 
         Ok(())
     }
-}
 
-// 🔹 **AI-Powered Economic Adjustments Based on Governance Decisions**
-impl QuantumGovernance {
+    // 🔹 AI-Powered Economic Adjustments Based on Governance Decisions
     pub async fn dynamically_adjust_staking_rewards(&mut self) {
         let mut ai_engine = self.ai_policy_engine.write().await;
         let new_rewards = ai_engine.optimize_staking_rewards();
-        
-        // Apply the AI-based adjustments
-        self.config.staking_rewards_rate = new_rewards;
+
+        // Prevent over-inflation
+        if new_rewards > 0.10 { // Cap staking rewards at 10%
+            self.config.staking_rewards_rate = 0.10;
+        } else {
+            self.config.staking_rewards_rate = new_rewards;
+        }
     }
 }
 
-// 🔹 **Tests for AI-Powered Quantum Law & Finance System**
+// 🔹 Tests for AI-Powered Quantum Law & Finance System
 #[cfg(test)]
 mod tests {
     use super::*;
@@ -193,5 +195,14 @@ mod tests {
 
         let vote_result = governance.vote_with_reputation("user_4", &proposal_id, VoteType::For).await;
         assert!(vote_result.is_ok());
+    }
+
+    #[tokio::test]
+    async fn test_self_amend_contracts() {
+        let mut law_enforcement = SmartLawEnforcement::new();
+        
+        let result = law_enforcement.self_amend_contracts().await;
+        
+        assert!(result.is_ok(), "Smart contract amendment failed!");
     }
 }
