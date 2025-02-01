@@ -22,7 +22,7 @@ pqcrypto = "0.18.1"
 ed25519-dalek = "2.1.1"
 ring = "0.17.8"
 blake2 = "0.10.6"
-rand = "0.9.0"
+rand = { version = "0.8.5", features = ["std"] }  # ✅ Fixed deprecated `thread_rng()`
 
 # AI & Machine Learning for Metaverse Intelligence
 tensorflow = "0.21.0"
@@ -56,7 +56,7 @@ web-sys = { version = "0.3.77", features = ["WebSocket"] }
 ipfs-api = "0.17.0"
 ethers = "2.0.14"
 rust-ipfs = "0.14.1"
-arweave-rs = "0.2.0"  # NEW: Decentralized long-term audio storage
+arweave-rs = "0.2.0"  # ✅ Decentralized long-term audio storage
 
 # AI-Powered Governance & Reputation
 log = "0.4.25"
@@ -67,23 +67,31 @@ uuid = "1.12.1"
 ark-std = "0.4.0"
 ark-crypto-primitives = "0.4.0"
 ark-ff = "0.4.0"
-ark-groth16 = "0.4.0"
+ark-groth16 = "0.4.0"  # ✅ Fixes `VerifierKey` & `Proof` issues
+ark-serialize = "0.4.0" # ✅ Fixes `CanonicalDeserialize` issues
+ark-bls12-381 = "0.4.0" # ✅ Fixes `Bls12_381` import issues
 halo2_proofs = "0.3.0"
 rayon = "1.10.0"
+
+# 🔹 New Fixes: Missing Time & Cryptographic Dependencies
+chrono = { version = "0.4.31", features = ["serde"] }  # ✅ Fixes `Utc` & `DateTime` issues
+ark-relations = "0.4.0"  # ✅ Required for constraint systems in ZKPs
+ark-r1cs-std = "0.4.0"   # ✅ Needed for Groth16 constraint synthesis
+ark-snark = "0.4.0"      # ✅ Additional support for ZKP verification
 
 # Audio Processing & System Sound Support
 alsa = "0.9.1"
 alsa-sys = "0.3.1"
 cpal = "0.15.3"
 rodio = "0.20.1"
-symphonia = { version = "0.5.4", features = ["all"] }  # NEW: Universal audio decoder
-hound = "3.5.1"                 # NEW: WAV file support for NFTs
-opus = "0.3.0"                  # NEW: WebRTC audio codec
-libsamplerate = "0.1.0"         # NEW: High-quality sample rate conversion
+symphonia = { version = "0.5.4", features = ["all"] }  # ✅ Universal audio decoder
+hound = "3.5.1"                 # ✅ WAV file support for NFTs
+opus = "0.3.0"                  # ✅ WebRTC audio codec
+libsamplerate = "0.1.0"         # ✅ High-quality sample rate conversion
 
 # WebRTC Integration for Audio Streaming
-webrtc = "0.12.0"              # NEW: WebRTC peer-to-peer audio
-libdatachannel = "0.2.0+0.20.1" # NEW: Low-level WebRTC bindings
+webrtc = "0.12.0"               # ✅ WebRTC peer-to-peer audio
+libdatachannel = "0.2.0+0.20.1" # ✅ Low-level WebRTC bindings
 
 # Smart Contracts for Music Royalties
-subxt = "0.38.1"                # NEW: Cross-chain DeFi payouts for music streaming royalties
+subxt = "0.38.1"                # ✅ Cross-chain DeFi payouts for music streaming royalties
