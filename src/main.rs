@@ -1,42 +1,28 @@
-use std::sync::Arc;
+use log::info;
 use tokio::sync::{RwLock, mpsc};
-use chrono::{DateTime, Utc};
-use serde::{Deserialize, Serialize};
-use quantumfuse_sdk::{
-    error::GovernanceError,
-    pqc::dilithium2::DilithiumKeyPair,
-    zkps::QuantumZK,
-    ai::{PolicyAI, EconomySimulator, DisputeResolver, JudicialAI},
-    state::StateAccess,
-    consensus::QuantumConsensus,
-    bridge::QuantumBridge,
-    coin::QuantumFuseCoin,
-    did::{QuantumDID, ReputationSystem},
-    metaverse::{MetaverseRegistry, SmartLawEnforcement},
-    nft::GovernanceNFT,
-    finance::DecentralizedGovernanceBonds,
-    metrics::GovernanceMetrics
-};
 
-// ✅ Importing Core Modules
-mod ai_quantum_governance;
-mod zkp_voting;
 mod ai_analytics_dashboard;
 mod ai_defi_yield_execution_smart_contract;
+mod ai_defi_yield_optimizatiin_api;
 mod ai_defi_yield_optimization;
+mod ai_execution_speed_benchmarking;
 mod ai_forecasting_api;
 mod ai_metaverse_economy_dashboard;
 mod ai_metaverse_market_simulation;
 mod ai_metaverse_nft_and_land_valuation;
 mod ai_metaverse_npc_agents;
+mod ai_quantum_governance_system;
 mod ai_treasury_api;
 mod ai_treasury_execution_smart_contract;
 mod ai_treasury_forecasting;
+mod ai_quantum_governance;
+mod block;
 mod blockchain;
 mod consensus_mechanism;
 mod cross_chain_treasury_analytics_api;
 mod cross_chain_treasury_management;
 mod cross_platform_audio_handling;
+mod did;
 mod ipfs_upload;
 mod metaverse_analytics_api;
 mod music_nft_smart_contract;
@@ -53,78 +39,66 @@ mod quantum_supplychain_management;
 mod quantum_treasury_api;
 mod quantum_treasury_smart_contract;
 mod quantumfuse_coin;
+mod shard;
 mod state_manager;
 mod tps_benchmarking_and_transaction_processing;
+mod transaction;
 mod wallet;
 mod webrtc;
-
-use ai_quantum_governance::QuantumGovernance;
-use zkp_voting::{ZKPSystem, ZKVote};
-use ai_defi_yield_optimization::YieldOptimizer;
-use ai_treasury_forecasting::TreasuryForecaster;
-use ai_metaverse_npc_agents::MetaverseNPC;
-use music_nft_smart_contract::MusicNFTContract;
-use webrtc::WebRTCSystem;
-use quantum_treasury_smart_contract::QuantumTreasury;
+mod zkp_voting;
 
 #[tokio::main]
 async fn main() {
-    println!("🚀 Starting QuantumFuse...");
+    // Initialize Logging
+    env_logger::init();
+    info!("QuantumFuse SDK is starting... 🚀");
 
-    // ✅ Initialize AI-Powered Governance System
-    let mut governance = QuantumGovernance::new();
-    let zkp_system = ZKPSystem::new();
+    // Execute all QuantumFuse Modules
+    ai_analytics_dashboard::run();
+    ai_defi_yield_execution_smart_contract::deploy();
+    ai_defi_yield_optimizatiin_api::get_optimization_data();
+    ai_defi_yield_optimization::optimize_yields();
+    ai_execution_speed_benchmarking::run_benchmarks();
+    ai_forecasting_api::get_forecasts();
+    ai_metaverse_economy_dashboard::display_metrics();
+    ai_metaverse_market_simulation::simulate_market();
+    ai_metaverse_nft_and_land_valuation::valuate_assets();
+    ai_metaverse_npc_agents::spawn_agents();
+    ai_quantum_governance_system::apply_governance_rules();
+    ai_treasury_api::get_treasury_data();
+    ai_treasury_execution_smart_contract::execute_treasury_operations();
+    ai_treasury_forecasting::forecast_treasury_balance();
+    ai_quantum_governance::apply_quantum_governance();
+    block::create_block();
+    blockchain::add_block();
+    consensus_mechanism::validate_consensus();
+    cross_chain_treasury_analytics_api::get_cross_chain_analytics();
+    cross_chain_treasury_management::manage_cross_chain_treasury();
+    cross_platform_audio_handling::handle_audio();
+    did::create_did();
+    ipfs_upload::upload_to_ipfs();
+    metaverse_analytics_api::get_metaverse_analytics();
+    music_nft_smart_contract::mint_music_nft();
+    qfc_streaming_payments_smart_contract::enable_streaming_payments();
+    quantum_bridge::bridge_assets();
+    quantum_financial_management::manage_quantum_finance();
+    quantum_medical_management::manage_quantum_medical_data();
+    quantum_metaverse::integrate_with_metaverse();
+    quantum_node_and_api::run_quantum_node();
+    quantum_random_number_generator::generate_quantum_random_numbers();
+    quantum_realestate_tokenization::tokenize_real_estate();
+    quantum_services::use_quantum_services();
+    quantum_supplychain_management::manage_quantum_supply_chain();
+    quantum_treasury_api::get_quantum_treasury_data();
+    quantum_treasury_smart_contract::execute_quantum_treasury_operations();
+    quantumfuse_coin::mint_quantumfuse_coin();
+    shard::create_shard();
+    state_manager::manage_state();
+    tps_benchmarking_and_transaction_processing::benchmark_tps();
+    transaction::create_transaction();
+    wallet::create_wallet();
+    webrtc::enable_webrtc_communication();
+    zkp_voting::enable_zero_knowledge_proof_voting();
 
-    // ✅ Submit AI-Analyzed Proposal
-    let proposal_id = governance.submit_proposal(
-        "user123",
-        "Implement Quantum-Based Consensus Mechanism",
-    ).await.unwrap();
-    println!("📜 Proposal Submitted: {}", proposal_id);
-
-    // ✅ Generate ZKP Vote
-    let zk_vote = ZKVote {
-        voter_id: "voter_123".to_string(),
-        proposal_id: proposal_id.clone(),
-        proof: zkp_system.generate_proof("voter_123", &proposal_id),
-    };
-
-    // ✅ Verify ZKP Vote
-    if zkp_system.verify_vote(&zk_vote).await {
-        println!("✅ ZKP Vote Verified for Proposal: {}", proposal_id);
-    } else {
-        println!("❌ Vote Verification Failed!");
-    }
-
-    // ✅ Initialize AI-Powered Treasury System
-    let mut treasury_forecaster = TreasuryForecaster::new();
-    let future_reserves = treasury_forecaster.forecast_reserves().await;
-    println!("💰 Future Treasury Reserves Predicted: {:?}", future_reserves);
-
-    // ✅ Initialize WebRTC for Audio & Streaming
-    let webrtc_system = WebRTCSystem::new();
-    webrtc_system.start_streaming("audio_stream_1").await;
-    println!("🎧 WebRTC Audio Streaming Started!");
-
-    // ✅ Run AI-Based Yield Optimization
-    let mut yield_optimizer = YieldOptimizer::new();
-    let optimal_yield = yield_optimizer.optimize_yield().await;
-    println!("📈 Optimal Staking Yield: {}", optimal_yield);
-
-    // ✅ Initialize Quantum Treasury Smart Contract
-    let mut quantum_treasury = QuantumTreasury::new();
-    quantum_treasury.allocate_funds(5000).await;
-    println!("🏦 Funds Allocated in Quantum Treasury!");
-
-    // ✅ Deploy AI-Powered NPC Agents in Metaverse
-    let mut npc_agent = MetaverseNPC::new();
-    npc_agent.train_behavior("trade_strategy").await;
-    println!("🤖 AI NPC Agent Deployed in Metaverse!");
-
-    // ✅ Manage Music NFT Streaming Payments
-    let mut music_nft_contract = MusicNFTContract::new();
-    music_nft_contract.process_streaming_payment("artist_001", 10).await;
-    println!("🎵 Music NFT Streaming Payment Processed!");
-
-    println!("🚀 QuantumFuse SDK is Fully Operational!");
+    info!("QuantumFuse SDK has finished execution. ✅");
     }
