@@ -62,10 +62,8 @@ rust-ipfs = "0.14.1"            # Rust-native IPFS client
 log = "0.4.25"                  # Logging system
 env_logger = "0.11.6"           # Environment logger
 uuid = "1.12.1"                 # Unique ID generation for avatars & assets
-governance-sdk = { git = "https://github.com/CreoDAMO/quantumfuse-sdk/blob/main/src/ai-quantum_governance_system.rs" } # AI-driven governance
 
 # 🔹 Quantum AI Dispute Resolution & Law Enforcement
-smart-law = { git = "https://github.com/CreoDAMO/quantumfuse-sdk/blob/main/src/ai-quantum_governance_system.rs" } # AI-driven smart contract enforcement
 ark-std = "0.4.0"               # Standard utilities for Arkworks ecosystem
 ark-crypto-primitives = "0.4.0" # Cryptographic primitives (Merkle trees, signatures, etc.)
 ark-ff = "0.4.0"                # Finite field arithmetic for cryptography
