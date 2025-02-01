@@ -6,6 +6,11 @@ on:
   pull_request:
     branches: [ "main" ]
 
+permissions:
+  contents: read   # ✅ Only allow read access to repo contents
+  actions: read    # ✅ Allows reading workflows
+  checks: read     # ✅ Allows reading check runs for statuses
+
 env:
   CARGO_TERM_COLOR: always
 
