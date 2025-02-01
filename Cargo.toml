@@ -71,6 +71,8 @@ halo2_proofs = "0.3.0"
 rayon = "1.10.0"
 
 # 🔊 Audio Processing & System Sound Support
+alsa = "0.9.1"
+alsa-sys = "0.3.1"
 cpal = "0.15.3"
 rodio = "0.20.1"
 symphonia = { version = "0.5.4", features = ["all"] }  # 🔥 NEW: Universal audio decoder
