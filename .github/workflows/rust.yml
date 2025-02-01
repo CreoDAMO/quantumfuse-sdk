@@ -16,15 +16,16 @@ jobs:
     steps:
       - uses: actions/checkout@v4
 
-      # Install ALSA development files (ONLY IF YOU NEED ALSA!)
-      - name: Install ALSA Dependencies
+      # Install required system dependencies
+      - name: Install System Dependencies
         run: |
           sudo apt-get update
-          sudo apt-get install -y libasound2-dev pkg-config
+          sudo apt-get install -y libasound2-dev libudev-dev pkg-config
 
+      # Build the Rust project
       - name: Build
         run: cargo build --verbose
 
+      # Run tests
       - name: Run tests
         run: cargo test --verbose
-        
