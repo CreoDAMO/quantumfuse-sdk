@@ -1,116 +1,99 @@
-use log::{info, error}; // Import logging framework
-use tokio::sync::RwLock;
-use std::sync::Arc;
+// Import all modules
+pub use ai_analytics_dashboard::run as run_ai_analytics_dashboard;
+pub use ai_defi_yield_execution_smart_contract::deploy as deploy_ai_defi_yield_execution_smart_contract;
+pub use ai_defi_yield_optimization_api::get_optimization_data as get_defi_yield_optimization_data;
+pub use ai_defi_yield_optimization::optimize_yields as optimize_defi_yields;
+pub use ai_execution_speed_benchmarking::run_benchmarks as run_ai_execution_speed_benchmarks;
+pub use ai_forecasting_api::get_forecasts as get_ai_forecasts;
+pub use ai_metaverse_economy_dashboard::display_metrics as display_metaverse_economy_metrics;
+pub use ai_metaverse_market_simulation::simulate_market as simulate_metaverse_market;
+pub use ai_metaverse_nft_and_land_valuation::valuate_assets as valuate_metaverse_assets;
+pub use ai_metaverse_npc_agents::spawn_agents as spawn_metaverse_npc_agents;
+pub use ai_quantum_governance_system::apply_governance_rules as apply_quantum_governance_rules;
+pub use ai_treasury_api::get_treasury_data as get_ai_treasury_data;
+pub use ai_treasury_execution_smart_contract::execute_treasury_operations as execute_ai_treasury_operations;
+pub use ai_treasury_forecasting::forecast_treasury_balance as forecast_treasury_balance;
+pub use ai_quantum_governance::manage_quantum_governance;
+pub use block::create_block;
+pub use blockchain::add_block;
+pub use consensus_mechanism::validate_consensus;
+pub use cross_chain_treasury_analytics_api::get_cross_chain_analytics;
+pub use cross_chain_treasury_management::manage_cross_chain_treasury;
+pub use cross_platform_audio_handling::process_audio;
+pub use did::manage_did;
+pub use ipfs_upload::upload_to_ipfs;
+pub use metaverse_analytics_api::analyze_metaverse_data;
+pub use music_nft_smart_contract::deploy_music_nft_contract;
+pub use qfc_streaming_payments_smart_contract::handle_streaming_payments;
+pub use quantum_bridge::bridge_assets;
+pub use quantum_financial_management::manage_quantum_finance;
+pub use quantum_medical_management::manage_medical_data;
+pub use quantum_metaverse::manage_metaverse;
+pub use quantum_node_and_api::setup_quantum_node;
+pub use quantum_random_number_generator::generate_quantum_rng;
+pub use quantum_realestate_tokenization::tokenize_realestate;
+pub use quantum_services::manage_quantum_services;
+pub use quantum_supplychain_management::manage_supply_chain;
+pub use quantum_treasury_api::get_quantum_treasury_data;
+pub use quantum_treasury_smart_contract::execute_quantum_treasury_operations;
+pub use quantumfuse_coin::mint_quantumfuse_coin;
+pub use shard::manage_shards;
+pub use state_manager::handle_state_management;
+pub use transaction::create_transaction;
+pub use wallet::create_wallet;
+pub use webrtc::enable_webrtc_communication;
+pub use zkp_voting::enable_zero_knowledge_proof_voting;
 
-// ✅ Declare Modules
-mod ai_analytics_dashboard;
-mod ai_defi_yield_execution_smart_contract;
-mod ai_defi_yield_optimization_api;
-mod ai_defi_yield_optimization;
-mod ai_execution_speed_benchmarking;
-mod ai_forecasting_api;
-mod ai_metaverse_economy_dashboard;
-mod ai_metaverse_market_simulation;
-mod ai_metaverse_nft_and_land_valuation;
-mod ai_metaverse_npc_agents;
-mod ai_quantum_governance_system;
-mod ai_treasury_api;
-mod ai_treasury_execution_smart_contract;
-mod ai_treasury_forecasting;
-mod cross_chain_treasury_analytics_api;
-mod cross_chain_treasury_management;
-mod block;
-mod blockchain;
-mod consensus_mechanism;
-mod ipfs_upload;
-mod quantum_bridge;
-mod quantum_treasury_api;
-mod quantum_treasury_smart_contract;
-mod quantumfuse_coin;
-mod state_manager;
-mod transaction;
-mod wallet;
-mod webrtc;
-mod zkp_voting;
-
-// ✅ Main Function
 #[tokio::main]
 async fn main() {
-    // ✅ Initialize Logger
     env_logger::init();
-    info!("🚀 QuantumFuse SDK is starting...");
+    println!("🚀 QuantumFuse SDK is starting...");
 
-    // ✅ Initialize Components
-    if let Err(e) = run_ai_modules().await {
-        error!("❌ AI Module Error: {}", e);
-        return;
-    }
+    // Call module functions
+    run_ai_analytics_dashboard().unwrap();
+    deploy_ai_defi_yield_execution_smart_contract().unwrap();
+    get_defi_yield_optimization_data().unwrap();
+    optimize_defi_yields().unwrap();
+    run_ai_execution_speed_benchmarks().unwrap();
+    get_ai_forecasts().unwrap();
+    display_metaverse_economy_metrics().unwrap();
+    simulate_metaverse_market().unwrap();
+    valuate_metaverse_assets().unwrap();
+    spawn_metaverse_npc_agents().unwrap();
+    apply_quantum_governance_rules().unwrap();
+    get_ai_treasury_data().unwrap();
+    execute_ai_treasury_operations().unwrap();
+    forecast_treasury_balance().unwrap();
+    manage_quantum_governance().unwrap();
+    create_block().unwrap();
+    add_block().unwrap();
+    validate_consensus().unwrap();
+    get_cross_chain_analytics().unwrap();
+    manage_cross_chain_treasury().unwrap();
+    process_audio().unwrap();
+    manage_did().unwrap();
+    upload_to_ipfs().unwrap();
+    analyze_metaverse_data().unwrap();
+    deploy_music_nft_contract().unwrap();
+    handle_streaming_payments().unwrap();
+    bridge_assets().unwrap();
+    manage_quantum_finance().unwrap();
+    manage_medical_data().unwrap();
+    manage_metaverse().unwrap();
+    setup_quantum_node().unwrap();
+    generate_quantum_rng().unwrap();
+    tokenize_realestate().unwrap();
+    manage_quantum_services().unwrap();
+    manage_supply_chain().unwrap();
+    get_quantum_treasury_data().unwrap();
+    execute_quantum_treasury_operations().unwrap();
+    mint_quantumfuse_coin().unwrap();
+    manage_shards().unwrap();
+    handle_state_management().unwrap();
+    create_transaction().unwrap();
+    create_wallet().unwrap();
+    enable_webrtc_communication().unwrap();
+    enable_zero_knowledge_proof_voting().unwrap();
 
-    if let Err(e) = run_blockchain_components().await {
-        error!("❌ Blockchain Component Error: {}", e);
-        return;
-    }
-
-    if let Err(e) = run_quantum_services().await {
-        error!("❌ Quantum Services Error: {}", e);
-        return;
-    }
-
-    info!("✅ QuantumFuse SDK Execution Completed!");
-}
-
-// 📌 AI Module Execution
-async fn run_ai_modules() -> Result<(), Box<dyn std::error::Error>> {
-    info!("🔹 Running AI Modules...");
-
-    ai_analytics_dashboard::run()?;
-    ai_defi_yield_execution_smart_contract::deploy()?;
-    ai_defi_yield_optimization_api::get_optimization_data()?;
-    ai_defi_yield_optimization::optimize_yields()?;
-    ai_execution_speed_benchmarking::run_benchmarks()?;
-    ai_forecasting_api::get_forecasts()?;
-    ai_metaverse_economy_dashboard::display_metrics()?;
-    ai_metaverse_market_simulation::simulate_market()?;
-    ai_metaverse_nft_and_land_valuation::valuate_assets()?;
-    ai_metaverse_npc_agents::spawn_agents()?;
-    ai_quantum_governance_system::apply_governance_rules()?;
-    ai_treasury_api::get_treasury_data()?;
-    ai_treasury_execution_smart_contract::execute_treasury_operations()?;
-    ai_treasury_forecasting::forecast_treasury_balance()?;
-
-    info!("✅ AI Modules Completed!");
-    Ok(())
-}
-
-// 📌 Blockchain Component Execution
-async fn run_blockchain_components() -> Result<(), Box<dyn std::error::Error>> {
-    info!("🔹 Running Blockchain Components...");
-
-    block::create_block()?;
-    blockchain::add_block()?;
-    consensus_mechanism::validate_consensus()?;
-    ipfs_upload::upload_to_ipfs()?;
-    quantum_bridge::bridge_assets()?;
-    quantum_treasury_api::get_quantum_treasury_data()?;
-    quantum_treasury_smart_contract::execute_quantum_treasury_operations()?;
-    quantumfuse_coin::mint_quantumfuse_coin()?;
-    transaction::create_transaction()?;
-    wallet::create_wallet()?;
-    webrtc::enable_webrtc_communication()?;
-    zkp_voting::enable_zero_knowledge_proof_voting()?;
-
-    info!("✅ Blockchain Components Completed!");
-    Ok(())
-}
-
-// 📌 Quantum Services Execution
-async fn run_quantum_services() -> Result<(), Box<dyn std::error::Error>> {
-    info!("🔹 Running Quantum Services...");
-
-    cross_chain_treasury_analytics_api::get_cross_chain_analytics()?;
-    cross_chain_treasury_management::manage_cross_chain_treasury()?;
-    state_manager::manage_state()?;
-
-    info!("✅ Quantum Services Completed!");
-    Ok(())
+    println!("✅ QuantumFuse SDK Execution Completed!");
 }
