@@ -9,7 +9,6 @@ license = "Apache 2.0"
 
 [dependencies]
 # 🔹 Core Quantum Blockchain & Smart Contracts
-quantumfuse-sdk = { git = "https://github.com/CreoDAMO/quantumfuse-sdk" }
 substrate-api-client = "1.16.0"  # Polkadot/Substrate blockchain API
 cosmwasm-std = "2.2.0"          # Cosmos-based smart contract execution
 ethabi = "18.0.0"               # Ethereum smart contract parsing
