@@ -1,5 +1,5 @@
 use rust_bert::pipelines::sentiment::{SentimentModel, SentimentPolarity};
-use ark_groth16::{Proof, VerifierKey, verify_proof};
+use ark_groth16::{Proof, VerifyingKey, verify_proof};  // ✅ Fixed import
 use ark_serialize::CanonicalDeserialize;
 use serde::{Deserialize, Serialize};
 use std::collections::HashMap;
@@ -68,4 +68,4 @@ impl QuantumGovernance {
         self.proposals.insert(id.clone(), proposal);
         id
     }
-}
+    }
