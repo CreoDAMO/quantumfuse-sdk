@@ -16,6 +16,7 @@ ethabi = "18.0.0"
 foundry = "0.3.0"
 serde = { version = "1.0.217", features = ["derive"] }
 serde_json = "1.0.138"
+ruzstd = "0.8"  # Or use "*" for any compatible version, or a specific later version if you prefer
 
 # Quantum & Post-Quantum Cryptography
 pqcrypto = "0.18.1"
