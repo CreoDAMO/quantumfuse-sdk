@@ -38,6 +38,7 @@ pub mod quantum_treasury_smart_contract;
 pub mod quantumfuse_coin;
 pub mod shard;
 pub mod state_manager;
+pub mod tps_benchmarking_and_transaction_processing;
 pub mod transaction;
 pub mod wallet;
 pub mod webrtc;
