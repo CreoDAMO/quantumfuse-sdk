@@ -1,58 +1,100 @@
-[package] name = "quantumfuse-sdk" version = "0.1.0" edition = "2021" authors = ["CreoDAMO"] description = "The QuantumFuse SDK: A comprehensive framework for building decentralized applications on the QuantumFuse Blockchain." repository = "https://github.com/CreoDAMO/quantumfuse-sdk" license = "Apache 2.0"
+[package]
+name = "quantumfuse-sdk"
+version = "0.1.0"
+edition = "2021"
+authors = ["CreoDAMO"]
+description = "The QuantumFuse SDK: A comprehensive framework for building decentralized applications on the QuantumFuse Blockchain."
+repository = "https://github.com/CreoDAMO/quantumfuse-sdk"
+license = "Apache 2.0"
 
 [dependencies]
 
-Core Quantum Blockchain & Smart Contracts
+# Core Quantum Blockchain & Smart Contracts
+substrate-api-client = "1.16.0"
+cosmwasm-std = "2.2.0"
+ethabi = "18.0.0"
+foundry = "0.3.0"
+serde = { version = "1.0.217", features = ["derive"] }
+serde_json = "1.0.138"
+ruzstd = "0.8"  # Or use "*" for any compatible version, or a specific later version if you prefer
 
-substrate-api-client = "1.16.0" cosmwasm-std = "2.2.0" ethabi = "18.0.0" foundry = "0.3.0" serde = { version = "1.0.217", features = ["derive"] } serde_json = "1.0.138" ruzstd = "0.8"  # Or use "*" for any compatible version, or a specific later version if you prefer
+# Quantum & Post-Quantum Cryptography
+pqcrypto = "0.18.1"
+ed25519-dalek = "2.1.1"
+ring = "0.17.8"
+base58 = "0.2.0"
+blake2 = "0.10.6"
+blake3 = "1.5.5"
+rand = { version = "0.8.5", features = ["std"] }  # ✅ Fixed deprecated `thread_rng()`
 
-Quantum & Post-Quantum Cryptography
+# AI & Machine Learning for Metaverse Intelligence
+tensorflow = "0.21.0"
+ndarray = "0.16.1"
+rust-bert = "0.23.0"
 
-pqcrypto = "0.18.1" ed25519-dalek = "2.1.1" ring = "0.17.8" base58 = "0.2.0" blake2 = "0.10.6" blake3 = "1.5.5" rand = { version = "0.8.5", features = ["std"] }  # ✅ Fixed deprecated thread_rng()
+# Networking & Real-Time Communication
+tokio = { version = "1.43.0", features = ["full"] }
+reqwest = { version = "0.12.12", features = ["json"] }
+tokio-tungstenite = "0.20.1"
+tungstenite = "0.21.0"
+warp = "0.3.7"
+axum = { version = "0.8.1", features = ["ws"] }
+hyper = { version = "1.6.0", features = ["full"] }
+tower = "0.5.2"
 
-AI & Machine Learning for Metaverse Intelligence
+# Metaverse & 3D Graphics
+bevy = "0.15.1"
+rapier3d = "0.23.0"
+wgpu = "24.0.1"
+glam = "0.29.2"
+nalgebra = "0.33.2"
+gltf = "1.4.1"
 
-tensorflow = "0.21.0" ndarray = "0.16.1" rust-bert = "0.23.0"
+# VR & AR Support
+openxr = "0.19.0"
+leptos = "0.7.5"
+web-sys = { version = "0.3.77", features = ["WebSocket"] }
 
-Networking & Real-Time Communication
+# NFT & Digital Asset Management
+ipfs-api = "0.17.0"
+ethers = "2.0.14"
+rust-ipfs = "0.14.1"
+arweave-rs = "0.2.0"  # ✅ Decentralized long-term audio storage
 
-tokio = { version = "1.43.0", features = ["full"] } reqwest = { version = "0.12.12", features = ["json"] } tokio-tungstenite = "0.20.1" tungstenite = "0.21.0" warp = "0.3.7" axum = { version = "0.8.1", features = ["ws"] } hyper = { version = "1.6.0", features = ["full"] } tower = "0.5.2"
+# AI-Powered Governance & Reputation
+log = "0.4.25"
+env_logger = "0.11.6"
+uuid = "1.12.1"
 
-Metaverse & 3D Graphics
+# Quantum AI Dispute Resolution & Law Enforcement
+ark-std = "0.4.0"
+ark-crypto-primitives = "0.4.0"
+ark-ff = "0.4.0"
+ark-groth16 = "0.4.0"  # ✅ Fixes `VerifierKey` & `Proof` issues
+ark-serialize = "0.4.0" # ✅ Fixes `CanonicalDeserialize` issues
+ark-bls12-381 = "0.4.0" # ✅ Fixes `Bls12_381` import issues
+halo2_proofs = "0.3.0"
+rayon = "1.10.0"
 
-bevy = "0.15.1" rapier3d = "0.23.0" wgpu = "24.0.1" glam = "0.29.2" nalgebra = "0.33.2" gltf = "1.4.1"
+# 🔹 New Fixes: Missing Time & Cryptographic Dependencies
+chrono = { version = "0.4.31", features = ["serde"] }  # ✅ Fixes `Utc` & `DateTime` issues
+ark-relations = "0.4.0"  # ✅ Required for constraint systems in ZKPs
+ark-r1cs-std = "0.4.0"   # ✅ Needed for Groth16 constraint synthesis
+ark-snark = "0.4.0"      # ✅ Additional support for ZKP verification
 
-VR & AR Support
+# Audio Processing & System Sound Support
+alsa = "0.9.1"
+alsa-sys = "0.3.1"
+cpal = "0.15.3"
+rodio = "0.20.1"
+symphonia = { version = "0.5.4", features = ["all"] }  # ✅ Universal audio decoder
+hound = "3.5.1"                 # ✅ WAV file support for NFTs
+opus = "0.3.0"                  # ✅ WebRTC audio codec
+libsamplerate = "0.1.0"         # ✅ High-quality sample rate conversion
 
-openxr = "0.19.0" leptos = "0.7.5" web-sys = { version = "0.3.77", features = ["WebSocket"] }
+# WebRTC Integration for Audio Streaming
+webrtc = "0.12.0"               # ✅ WebRTC peer-to-peer audio
+libdatachannel = "0.2.0+0.20.1" # ✅ Low-level WebRTC bindings
 
-NFT & Digital Asset Management
-
-ipfs-api = "0.17.0" ethers = "2.0.14" rust-ipfs = "0.14.1" arweave-rs = "0.2.0"  # ✅ Decentralized long-term audio storage
-
-AI-Powered Governance & Reputation
-
-log = "0.4.25" env_logger = "0.11.6" uuid = "1.12.1"
-
-Quantum AI Dispute Resolution & Law Enforcement
-
-ark-std = "0.4.0" ark-crypto-primitives = "0.4.0" ark-ff = "0.4.0" ark-groth16 = "0.4.0"  # ✅ Fixes VerifierKey & Proof issues ark-serialize = "0.4.0" # ✅ Fixes CanonicalDeserialize issues ark-bls12-381 = "0.4.0" # ✅ Fixes Bls12_381 import issues halo2_proofs = "0.3.0" rayon = "1.10.0"
-
-🔹 New Fixes: Missing Time & Cryptographic Dependencies
-
-chrono = { version = "0.4.31", features = ["serde"] }  # ✅ Fixes Utc & DateTime issues ark-relations = "0.4.0"  # ✅ Required for constraint systems in ZKPs ark-r1cs-std = "0.4.0"   # ✅ Needed for Groth16 constraint synthesis ark-snark = "0.4.0"      # ✅ Additional support for ZKP verification
-
-Audio Processing & System Sound Support
-
-alsa = "0.9.1" alsa-sys = "0.3.1" cpal = "0.15.3" rodio = "0.20.1" symphonia = { version = "0.5.4", features = ["all"] }  # ✅ Universal audio decoder hound = "3.5.1"                 # ✅ WAV file support for NFTs opus = "0.3.0"                  # ✅ WebRTC audio codec libsamplerate = "0.1.0"         # ✅ High-quality sample rate conversion
-
-WebRTC Integration for Audio Streaming
-
-webrtc = "0.12.0"               # ✅ WebRTC peer-to-peer audio libdatachannel = "0.2.0+0.20.1" # ✅ Low-level WebRTC bindings
-
-Smart Contracts for Music Royalties
-
+# Smart Contracts for Music Royalties
 subxt = "0.38.1"                # ✅ Cross-chain DeFi payouts for music streaming royalties
-
-Let's update the Cargo.toml
-
