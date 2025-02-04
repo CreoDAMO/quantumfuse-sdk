@@ -1,4 +1,4 @@
-pub fn (q(qq) -> Result<(), Box> {
-println!(			qqqqqqaaqq	QQQQQQQ		QQ📈 Fetching AI DeFi Yield Optimization Data... ✅");
-Ok(())q
+pub fn get_optimization_data() -> Result<(), Box> {
+println!("📈 Fetching AI DeFi Yield Optimization Data... ✅");
+Ok(())
 }
