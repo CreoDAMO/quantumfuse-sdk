@@ -1,4 +1,4 @@
-name: Rust
+name: Rust CI
 
 on:
   push:
@@ -19,18 +19,49 @@ jobs:
     runs-on: ubuntu-latest
 
     steps:
-      - uses: actions/checkout@v4
+      # ✅ Checkout repository
+      - name: Checkout Code
+        uses: actions/checkout@v4
 
-      # Install required system dependencies
+      # ✅ Install Rust Toolchain (Stable)
+      - name: Install Rust
+        uses: actions-rs/toolchain@v1
+        with:
+          toolchain: stable
+          override: true
+          components: clippy, rustfmt  # ✅ Adds Clippy & RustFmt
+
+      # ✅ Enable Cargo Caching
+      - name: Cache Dependencies
+        uses: actions/cache@v3
+        with:
+          path: ~/.cargo/registry
+          key: cargo-${{ runner.os }}-${{ hashFiles('**/Cargo.lock') }}
+          restore-keys: |
+            cargo-${{ runner.os }}-
+
+      # ✅ Install System Dependencies (for Audio, USB, etc.)
       - name: Install System Dependencies
         run: |
           sudo apt-get update
           sudo apt-get install -y libasound2-dev libudev-dev pkg-config
 
-      # Build the Rust project
+      # ✅ Check Formatting
+      - name: Check Formatting
+        run: cargo fmt -- --check
+
+      # ✅ Lint Code (Clippy)
+      - name: Lint with Clippy
+        run: cargo clippy -- -D warnings  # 🚨 Fails on warnings
+
+      # ✅ Build the Rust project
       - name: Build
         run: cargo build --verbose
 
-      # Run tests
-      - name: Run tests
-        run: cargo test --verbose
+      # ✅ Run Tests (All Features)
+      - name: Run Tests
+        run: cargo test --all-features --verbose
+
+      # ✅ Run Documentation Tests (if applicable)
+      - name: Run Doc Tests
+        run: cargo test --doc
