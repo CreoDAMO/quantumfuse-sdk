@@ -33,7 +33,7 @@ pub fn record_stream(deps: DepsMut, user: String, nft_id: String) -> StdResult<R
     Ok(Response::new().add_message(cosmos_msg))
 }
 
-// Implement the missing `handle_streaming_payments` function
+// Make handle_streaming_payments public
 pub fn handle_streaming_payments() -> Result<(), Box<dyn std::error::Error>> {
     println!("Processing streaming payments...");
     // Implement streaming payments handling logic here
