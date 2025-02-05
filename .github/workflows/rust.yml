@@ -31,7 +31,7 @@ jobs:
 
       # ✅ Enable Cargo Caching
       - name: Cache Dependencies
-        uses: Swatinem/rust-cache@abcd1234  # Use a pinned commit hash
+        uses: Swatinem/rust-cache@3c229d5  # Use the pinned commit hash
         
       # ✅ Install System Dependencies
       - name: Install System Dependencies
