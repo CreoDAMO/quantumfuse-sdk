@@ -1,3 +1,6 @@
+use serde_json::json;
+
+// ✅ Make sure this function is public so it can be used in `main.rs`
 pub fn get_cross_chain_analytics() -> Result<(), Box<dyn std::error::Error>> {
     println!("🔗 Retrieving cross-chain treasury analytics...");
     let data = json!({
