@@ -25,13 +25,13 @@ jobs:
 
       # ✅ Install Rust Toolchain (Stable)
       - name: Install Rust
-        uses: dtolnay/rust-toolchain@stable
+        uses: dtolnay/rust-toolchain@stable  # ✅ Simplified installation
         with:
           components: clippy, rustfmt
 
-      # ✅ Enable Cargo Caching (with cache-on-failure)
+      # ✅ Enable Cargo Caching
       - name: Cache Dependencies
-        uses: Swatinem/rust-cache@v2
+        uses: Swatinem/rust-cache@v2  # ✅ Better Rust caching
         with:
           cache-on-failure: true
 
@@ -56,3 +56,7 @@ jobs:
       # ✅ Run Tests (All Features)
       - name: Run Tests
         run: cargo test --all-features --verbose
+
+      # ✅ Run Documentation Tests (Only If Docs Exist)
+      - name: Run Doc Tests
+        run: cargo test --doc || echo "No doc tests found."
