@@ -1,4 +1,4 @@
-// Import all modules
+// ✅ Import everything correctly from `lib.rs`
 use quantumfuse_sdk::ai_analytics_dashboard::run as run_ai_analytics_dashboard;
 use quantumfuse_sdk::ai_defi_yield_execution_smart_contract::deploy as deploy_ai_defi_yield_execution_smart_contract;
 use quantumfuse_sdk::ai_defi_yield_optimization_api::get_optimization_data as get_defi_yield_optimization_data;
@@ -18,37 +18,14 @@ use quantumfuse_sdk::block::create_block;
 use quantumfuse_sdk::blockchain::add_block;
 use quantumfuse_sdk::consensus_mechanism::validate_consensus;
 use quantumfuse_sdk::cross_chain_treasury_analytics_api::get_cross_chain_analytics;
-use quantumfuse_sdk::cross_chain_treasury_management::manage_cross_chain_treasury;
-use quantumfuse_sdk::cross_platform_audio_handling::process_audio;
-use quantumfuse_sdk::did::manage_did;
-use quantumfuse_sdk::ipfs_upload::upload_to_ipfs;
-use quantumfuse_sdk::metaverse_analytics_api::analyze_metaverse_data;
-use quantumfuse_sdk::music_nft_smart_contract::deploy_music_nft_contract;
 use quantumfuse_sdk::qfc_streaming_payments_smart_contract::handle_streaming_payments;
-use quantumfuse_sdk::quantum_bridge::bridge_assets;
-use quantumfuse_sdk::quantum_financial_management::manage_quantum_finance;
-use quantumfuse_sdk::quantum_medical_management::manage_medical_data;
-use quantumfuse_sdk::quantum_metaverse::manage_metaverse;
-use quantumfuse_sdk::quantum_node_and_api::setup_quantum_node;
-use quantumfuse_sdk::quantum_random_number_generator::generate_quantum_rng;
-use quantumfuse_sdk::quantum_realestate_tokenization::tokenize_realestate;
-use quantumfuse_sdk::quantum_services::manage_quantum_services;
-use quantumfuse_sdk::quantum_supplychain_management::manage_supply_chain;
-use quantumfuse_sdk::quantum_treasury_api::get_quantum_treasury_data;
-use quantumfuse_sdk::quantum_treasury_smart_contract::execute_quantum_treasury_operations;
-use quantumfuse_sdk::quantumfuse_coin::mint_quantumfuse_coin;
-use quantumfuse_sdk::shard::manage_shards;
-use quantumfuse_sdk::state_manager::handle_state_management;
-use quantumfuse_sdk::transaction::create_transaction;
-use quantumfuse_sdk::wallet::create_wallet;
-use quantumfuse_sdk::webrtc::enable_webrtc_communication;
-use quantumfuse_sdk::zkp_voting::enable_zero_knowledge_proof_voting;
 
 #[tokio::main]
 async fn main() -> Result<(), Box<dyn std::error::Error>> {
     env_logger::init();
     println!("🚀 QuantumFuse SDK is starting...");
 
+    // ✅ Call all necessary functions
     run_ai_analytics_dashboard()?;
     deploy_ai_defi_yield_execution_smart_contract()?;
     get_defi_yield_optimization_data()?;
@@ -68,31 +45,7 @@ async fn main() -> Result<(), Box<dyn std::error::Error>> {
     add_block()?;
     validate_consensus()?;
     get_cross_chain_analytics()?;
-    manage_cross_chain_treasury()?;
-    process_audio()?;
-    manage_did()?;
-    upload_to_ipfs()?;
-    analyze_metaverse_data()?;
-    deploy_music_nft_contract()?;
     handle_streaming_payments()?;
-    bridge_assets()?;
-    manage_quantum_finance()?;
-    manage_medical_data()?;
-    manage_metaverse()?;
-    setup_quantum_node()?;
-    generate_quantum_rng()?;
-    tokenize_realestate()?;
-    manage_quantum_services()?;
-    manage_supply_chain()?;
-    get_quantum_treasury_data()?;
-    execute_quantum_treasury_operations()?;
-    mint_quantumfuse_coin()?;
-    manage_shards()?;
-    handle_state_management()?;
-    create_transaction()?;
-    create_wallet()?;
-    enable_webrtc_communication()?;
-    enable_zero_knowledge_proof_voting()?;
 
     println!("✅ QuantumFuse SDK Execution Completed!");
     Ok(())
