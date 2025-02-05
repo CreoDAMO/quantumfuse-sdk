@@ -44,7 +44,3 @@ pub mod transaction;
 pub mod wallet;
 pub mod webrtc;
 pub mod zkp_voting;
-
-// ✅ Ensure these functions are re-exported globally for easy access
-pub use cross_chain_treasury_analytics_api::get_cross_chain_analytics;
-pub use qfc_streaming_payments_smart_contract::handle_streaming_payments;
