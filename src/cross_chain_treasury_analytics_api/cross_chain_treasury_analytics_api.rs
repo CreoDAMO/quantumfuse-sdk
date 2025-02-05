@@ -60,7 +60,7 @@ async fn get_staking_yields(
     }))
 }
 
-// Implement the missing `get_cross_chain_analytics` function
+// Make get_cross_chain_analytics public
 pub fn get_cross_chain_analytics() -> Result<(), Box<dyn std::error::Error>> {
     println!("Retrieving cross-chain treasury analytics...");
     let data = json!({
