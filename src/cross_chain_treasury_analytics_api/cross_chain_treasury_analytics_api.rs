@@ -1,4 +1,4 @@
-use axum::{routing::get, Router, Json};
+use axum::{routing::get, Router, Json, Extension};
 use std::sync::Arc;
 use tokio::sync::RwLock;
 use serde_json::json;
@@ -7,15 +7,23 @@ use quantumfuse_sdk::{
     ai::PolicyAI,
 };
 
+// ✅ Struct to hold treasury analytics data
+#[derive(Default)]
+struct TreasuryAnalytics {
+    treasury: QuantumTreasury,
+    bonds: DecentralizedGovernanceBonds,
+    staking: PolicyAI,
+}
+
 #[tokio::main]
 async fn main() {
-    let treasury_state = Arc::new(RwLock::new(TreasuryAnalytics::new()));
+    let treasury_state = Arc::new(RwLock::new(TreasuryAnalytics::default()));
 
     let app = Router::new()
         .route("/metrics/treasury/reserves", get(get_treasury_reserves))
         .route("/metrics/treasury/bonds", get(get_bond_metrics))
         .route("/metrics/treasury/staking", get(get_staking_yields))
-        .layer(axum::AddExtensionLayer::new(treasury_state));
+        .layer(Extension(treasury_state));
 
     println!("💰 Treasury Analytics API running at http://127.0.0.1:8083/");
     axum::Server::bind(&"127.0.0.1:8083".parse().unwrap())
@@ -24,9 +32,9 @@ async fn main() {
         .unwrap();
 }
 
-// 💳 **Quantum Treasury Reserves**
+// ✅ Fetch treasury reserves
 async fn get_treasury_reserves(
-    state: axum::Extension<Arc<RwLock<TreasuryAnalytics>>>,
+    Extension(state): Extension<Arc<RwLock<TreasuryAnalytics>>>,
 ) -> Json<serde_json::Value> {
     let state = state.read().await;
     Json(json!({
@@ -36,9 +44,9 @@ async fn get_treasury_reserves(
     }))
 }
 
-// 📈 **Bond Issuance & Returns**
+// ✅ Fetch bond issuance & returns
 async fn get_bond_metrics(
-    state: axum::Extension<Arc<RwLock<TreasuryAnalytics>>>,
+    Extension(state): Extension<Arc<RwLock<TreasuryAnalytics>>>,
 ) -> Json<serde_json::Value> {
     let state = state.read().await;
     Json(json!({
@@ -48,9 +56,9 @@ async fn get_bond_metrics(
     }))
 }
 
-// 🔮 **AI-Powered Staking Yield Predictions**
+// ✅ AI-powered staking yield predictions
 async fn get_staking_yields(
-    state: axum::Extension<Arc<RwLock<TreasuryAnalytics>>>,
+    Extension(state): Extension<Arc<RwLock<TreasuryAnalytics>>>,
 ) -> Json<serde_json::Value> {
     let state = state.read().await;
     Json(json!({
@@ -60,14 +68,14 @@ async fn get_staking_yields(
     }))
 }
 
-// Make get_cross_chain_analytics public
+// ✅ Make `get_cross_chain_analytics` public
 pub fn get_cross_chain_analytics() -> Result<(), Box<dyn std::error::Error>> {
-    println!("Retrieving cross-chain treasury analytics...");
+    println!("🔗 Retrieving cross-chain treasury analytics...");
     let data = json!({
         "total_cross_chain_transfers": 1000,
         "total_value_transferred": 10_000_000.0,
         "interoperability_score": 85
     });
-    println!("Cross-chain analytics data: {}", data);
+    println!("📊 Cross-chain analytics data: {}", data);
     Ok(())
 }
