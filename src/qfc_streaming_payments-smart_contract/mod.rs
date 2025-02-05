@@ -1,6 +1,6 @@
-pub mod cross_chain_treasury_analytics_api;
+pub mod qfc_streaming_payments_smart_contract;
 
-pub fn get_cross_chain_treasury_analytics() -> Result<(), Box<dyn std::error::Error>> {
-    println!("🔗 Fetching Cross-Chain Treasury Analytics... ✅");
+pub fn deploy_music_nft_contract() -> Result<(), Box<dyn std::error::Error>> {
+    println!("🎼 Deploying Music NFT Smart Contract... ✅");
     Ok(())
 }
