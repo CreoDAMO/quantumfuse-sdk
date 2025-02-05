@@ -45,10 +45,6 @@ jobs:
       - name: Update Rust Dependencies
         run: cargo update
 
-      # ✅ Upgrade `syn` specifically if needed
-      - name: Update `syn` Dependency
-        run: cargo update -p syn
-
       # Check Formatting
       - name: Check Formatting
         run: cargo fmt -- --check
