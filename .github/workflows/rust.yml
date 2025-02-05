@@ -25,13 +25,13 @@ jobs:
 
       # ✅ Install Rust Toolchain (Stable)
       - name: Install Rust
-        uses: dtolnay/rust-toolchain@stable  # ✅ Simplified installation
+        uses: dtolnay/rust-toolchain@stable
         with:
           components: clippy, rustfmt
 
       # ✅ Enable Cargo Caching
       - name: Cache Dependencies
-        uses: Swatinem/rust-cache@v2  # ✅ Better Rust caching
+        uses: Swatinem/rust-cache@v2
         with:
           cache-on-failure: true
 
@@ -41,13 +41,21 @@ jobs:
           sudo apt-get update
           sudo apt-get install -y libasound2-dev libudev-dev pkg-config
 
-      # ✅ Check Formatting (But Don't Fail Build)
+      # ✅ Check Formatting
       - name: Check Formatting
-        run: cargo fmt -- --check || echo "Formatting issues detected! Run 'cargo fmt' locally to fix."
+        run: |
+          if ! cargo fmt -- --check; then
+            echo "Formatting issues detected! Run 'cargo fmt' locally to fix."
+            exit 1
+          fi
 
-      # ✅ Lint Code (Clippy) and Fix Issues Automatically
+      # ✅ Lint Code (Clippy)
       - name: Lint with Clippy
-        run: cargo clippy -- -D warnings || echo "Clippy warnings detected!"
+        run: |
+          if ! cargo clippy -- -D warnings; then
+            echo "Clippy warnings detected!"
+            exit 1
+          fi
 
       # ✅ Build the Rust project
       - name: Build
@@ -57,6 +65,12 @@ jobs:
       - name: Run Tests
         run: cargo test --all-features --verbose
 
-      # ✅ Run Documentation Tests (Only If Docs Exist)
+      # ✅ Run Documentation Tests
       - name: Run Doc Tests
         run: cargo test --doc || echo "No doc tests found."
+
+      # ✅ Check for Future Incompatibilities
+      - name: Check for Future Incompatibilities
+        run: |
+          cargo check --future-incompat-report
+          cargo report future-incompatibilities || echo "No future incompatibilities found."
