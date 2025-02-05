@@ -19,58 +19,52 @@ jobs:
     runs-on: ubuntu-latest
 
     steps:
-      # ✅ Checkout repository
+      # Checkout repository
       - name: Checkout Code
         uses: actions/checkout@v4
 
-      # ✅ Install Rust Toolchain (Stable)
+      # Install Rust Toolchain (Stable)
       - name: Install Rust
         uses: dtolnay/rust-toolchain@stable
         with:
           components: clippy, rustfmt
 
-      # ✅ Enable Cargo Caching
+      # Cache Dependencies
       - name: Cache Dependencies
         uses: Swatinem/rust-cache@v2
         with:
           cache-on-failure: true
 
-      # ✅ Install System Dependencies
+      # Install System Dependencies
       - name: Install System Dependencies
         run: |
           sudo apt-get update
           sudo apt-get install -y libasound2-dev libudev-dev pkg-config
 
-      # ✅ Check Formatting
+      # ✅ Automatically Update Dependencies
+      - name: Update Rust Dependencies
+        run: cargo update
+
+      # ✅ Upgrade `syn` specifically if needed
+      - name: Update `syn` Dependency
+        run: cargo update -p syn
+
+      # Check Formatting
       - name: Check Formatting
-        run: |
-          if ! cargo fmt -- --check; then
-            echo "Formatting issues detected! Run 'cargo fmt' locally to fix."
-            exit 1
-          fi
+        run: cargo fmt -- --check
 
-      # ✅ Lint Code (Clippy)
+      # Lint Code (Clippy)
       - name: Lint with Clippy
-        run: |
-          if ! cargo clippy -- -D warnings; then
-            echo "Clippy warnings detected!"
-            exit 1
-          fi
+        run: cargo clippy -- -D warnings
 
-      # ✅ Build the Rust project
+      # Build the Rust project
       - name: Build
         run: cargo build --verbose
 
-      # ✅ Run Tests (All Features)
+      # Run Tests (All Features)
       - name: Run Tests
         run: cargo test --all-features --verbose
 
-      # ✅ Run Documentation Tests
+      # Run Documentation Tests
       - name: Run Doc Tests
-        run: cargo test --doc || echo "No doc tests found."
-
-      # ✅ Check for Future Incompatibilities
-      - name: Check for Future Incompatibilities
-        run: |
-          cargo check --future-incompat-report
-          cargo report future-incompatibilities || echo "No future incompatibilities found."
+        run: cargo test --doc
