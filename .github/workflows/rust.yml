@@ -30,12 +30,6 @@ jobs:
       with:
         components: clippy, rustfmt
 
-    # ✅ Enable Cargo Caching
-    - name: Cache Dependencies
-      uses: Swatinem/rust-cache@v2
-      with:
-        cache-on-failure: true
-
     # ✅ Install System Dependencies
     - name: Install System Dependencies
       run: |
