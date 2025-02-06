@@ -1,0 +1,90 @@
+[package]
+name = "quantumfuse-sdk"  # This is the name of your crate
+version = "0.1.0"
+edition = "2021"
+authors = ["CreoDAMO"]  # Update with your name/email
+description = "The QuantumFuse SDK" # Update with a better description
+repository = "https://github.com/CreoDAMO/quantumfuse-sdk.git" # Correct the repo URL
+license = "Apache-2.0"
+
+[lib]
+name = "quantumfuse_sdk" # Important: Matches the crate name and the name used in your code
+path = "src/lib.rs"     # Points to your library's main file
+
+[dependencies]
+syn = { workspace = true }        # Use workspace version
+anyhow = { workspace = true }     # Use workspace version
+tokio = { workspace = true }      # Use workspace version
+serde = { workspace = true }      # Use workspace version
+serde_json = { workspace = true } # Use workspace version
+axum = { workspace = true }       # Use workspace version
+dotenv = { workspace = true }     # Use workspace version
+env_logger = { workspace = true } # Use workspace version
+substrate-api-client = { workspace = true }
+cosmwasm-std = { workspace = true }
+ethabi = { workspace = true }
+foundry = { workspace = true }
+ethers = { workspace = true }
+subxt = { workspace = true }
+pqcrypto = { workspace = true }
+ed25519-dalek = { workspace = true }
+ring = { workspace = true }
+base58 = { workspace = true }
+blake2 = { workspace = true }
+blake3 = { workspace = true }
+rand = { version = "0.8.5", features = ["std"] }
+tensorflow = { workspace = true }
+ndarray = { workspace = true }
+rust-bert = { workspace = true }
+reqwest = { version = "0.12.12", features = ["json"] }
+tokio-tungstenite = { workspace = true }
+tungstenite = { workspace = true }
+warp = { workspace = true }
+hyper = { version = "1.6.0", features = ["full"] }
+tower = { workspace = true }
+bevy = { workspace = true }
+rapier3d = { workspace = true }
+wgpu = { workspace = true }
+glam = { workspace = true }
+nalgebra = { workspace = true }
+gltf = { workspace = true }
+openxr = { workspace = true }
+leptos = { workspace = true }
+ipfs-api = { workspace = true }
+rust-ipfs = { workspace = true }
+arweave-rs = { workspace = true }
+uuid = { workspace = true }
+ark-std = { workspace = true }
+ark-crypto-primitives = { workspace = true }
+ark-ff = { workspace = true }
+ark-groth16 = { workspace = true }
+ark-serialize = { workspace = true }
+ark-bls12-381 = { workspace = true }
+halo2_proofs = { workspace = true }
+rayon = { workspace = true }
+alsa = { workspace = true }
+alsa-sys = { workspace = true }
+cpal = { workspace = true }
+rodio = { workspace = true }
+symphonia = { workspace = true }
+hound = { workspace = true }
+opus = { workspace = true }
+libsamplerate = { workspace = true }
+webrtc = { workspace = true }
+libdatachannel = { workspace = true }
+crossbeam = { workspace = true }
+crossbeam-deque = { workspace = true }
+crossbeam-channel = { workspace = true }
+crossbeam-utils = { workspace = true }
+lock_api = { workspace = true }
+memoffset = { workspace = true }
+wasm-tools = { workspace = true }
+manyhow = { workspace = true }
+safer_owning_ref = { workspace = true }
+web-time = { workspace = true }
+
+web-sys = "0.3.77" 
+
+[features]
+default = []
+wasm = ["web-sys/WebSocket"]
