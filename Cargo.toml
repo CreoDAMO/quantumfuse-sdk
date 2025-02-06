@@ -41,6 +41,11 @@ axum = { version = "0.8.1", features = ["ws"] }
 hyper = { version = "1.6.0", features = ["full"] }
 tower = "0.5.2"
 
+# Crossbeam Utilities (Updated)
+crossbeam-deque = "0.8.6"
+crossbeam-channel = "0.5.14"
+crossbeam-utils = "0.8.21"
+
 # Metaverse & 3D Graphics
 bevy = "0.15.1"
 rapier3d = "0.23.0"
