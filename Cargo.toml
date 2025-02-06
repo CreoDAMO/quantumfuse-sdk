@@ -98,13 +98,13 @@ crossbeam-deque = "0.8.6" # Updated
 crossbeam-channel = "0.5.14" # Updated
 crossbeam-utils = "0.8.21" # Updated
 safer_owning_ref = "0.5.0" # Replaced owning_ref!
-borsh = "1.0.4"  # Updated
-crossbeam = "0.7.0" # Updated
-lock_api = "0.4.2" # Updated
-memoffset = "0.6.2" # Updated
+borsh = "1.5.5"  # Updated
+crossbeam = "0.8.4" # Updated
+lock_api = "0.4.12" # Updated
+memoffset = "0.9.1" # Updated
 
 # Replaced Unmaintained Crates:
-derive_more = "0.99.17" # Replaced derivative
-web-time = "0.1" # Replaced instant
-wasm-tools = "0.1" # Replaced parity-wasm
-manyhow = "0.1" # Replaced proc-macro-error
+derive_more = "2.0.1" # Replaced derivative
+web-time = "1.10.0" # Replaced instant
+wasm-tools = "1.225.0" # Replaced parity-wasm
+manyhow = "0.11.4" # Replaced proc-macro-error
