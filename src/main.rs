@@ -1,52 +1,132 @@
-// ✅ Import everything correctly from `lib.rs`
-use quantumfuse_sdk::ai_analytics_dashboard::run as run_ai_analytics_dashboard;
-use quantumfuse_sdk::ai_defi_yield_execution_smart_contract::deploy as deploy_ai_defi_yield_execution_smart_contract;
-use quantumfuse_sdk::ai_defi_yield_optimization_api::get_optimization_data as get_defi_yield_optimization_data;
-use quantumfuse_sdk::ai_defi_yield_optimization::optimize_yields as optimize_defi_yields;
-use quantumfuse_sdk::ai_execution_speed_benchmarking::run_benchmarks as run_ai_execution_speed_benchmarks;
-use quantumfuse_sdk::ai_forecasting_api::get_forecasts as get_ai_forecasts;
-use quantumfuse_sdk::ai_metaverse_economy_dashboard::display_metrics as display_metaverse_economy_metrics;
-use quantumfuse_sdk::ai_metaverse_market_simulation::simulate_market as simulate_metaverse_market;
-use quantumfuse_sdk::ai_metaverse_nft_and_land_valuation::valuate_assets as valuate_metaverse_assets;
-use quantumfuse_sdk::ai_metaverse_npc_agents::spawn_agents as spawn_metaverse_npc_agents;
-use quantumfuse_sdk::ai_quantum_governance_system::apply_governance_rules as apply_quantum_governance_rules;
-use quantumfuse_sdk::ai_treasury_api::get_treasury_data as get_ai_treasury_data;
-use quantumfuse_sdk::ai_treasury_execution_smart_contract::execute_treasury_operations as execute_ai_treasury_operations;
-use quantumfuse_sdk::ai_treasury_forecasting::forecast_treasury_balance;
-use quantumfuse_sdk::ai_quantum_governance::manage_quantum_governance;
-use quantumfuse_sdk::block::create_block;
-use quantumfuse_sdk::blockchain::add_block;
-use quantumfuse_sdk::consensus_mechanism::validate_consensus;
-use quantumfuse_sdk::cross_chain_treasury_analytics_api::get_cross_chain_analytics;
-use quantumfuse_sdk::qfc_streaming_payments_smart_contract::handle_streaming_payments;
+use axum::{routing::get, Router, Json, extract::State};
+use serde::{Serialize, Deserialize};
+use serde_json::json;
+use std::{sync::Arc, time::Duration};
+use tokio::{sync::RwLock, task, time::sleep};
+use quantumfuse_sdk::{
+    ai::{PolicyAI, DisputeResolver, JudicialAI},
+    finance::DecentralizedGovernanceBonds,
+    did::ReputationSystem,
+    consensus::QuantumConsensus,
+    metrics::{GovernanceMetrics, TreasuryMetrics, JudiciaryMetrics, ReputationMetrics},
+    blockchain::BlockchainClient, // Assuming a client to interact with QuantumFuse blockchain
+};
+use dotenv::dotenv;
+use std::env;
+
+/// 📊 **Dashboard State Struct**
+#[derive(Debug, Serialize, Deserialize)]
+struct DashboardState {
+    governance: GovernanceMetrics,
+    treasury: TreasuryMetrics,
+    judiciary: JudiciaryMetrics,
+    reputation: ReputationMetrics,
+}
+
+impl DashboardState {
+    fn new() -> Self {
+        Self {
+            governance: GovernanceMetrics::default(),
+            treasury: TreasuryMetrics::default(),
+            judiciary: JudiciaryMetrics::default(),
+            reputation: ReputationMetrics::default(),
+        }
+    }
+}
 
 #[tokio::main]
 async fn main() -> Result<(), Box<dyn std::error::Error>> {
+    dotenv().ok(); // Load environment variables
     env_logger::init();
-    println!("🚀 QuantumFuse SDK is starting...");
 
-    // ✅ Call all necessary functions
-    run_ai_analytics_dashboard()?;
-    deploy_ai_defi_yield_execution_smart_contract()?;
-    get_defi_yield_optimization_data()?;
-    optimize_defi_yields()?;
-    run_ai_execution_speed_benchmarks()?;
-    get_ai_forecasts()?;
-    display_metaverse_economy_metrics()?;
-    simulate_metaverse_market()?;
-    valuate_metaverse_assets()?;
-    spawn_metaverse_npc_agents()?;
-    apply_quantum_governance_rules()?;
-    get_ai_treasury_data()?;
-    execute_ai_treasury_operations()?;
-    forecast_treasury_balance()?;
-    manage_quantum_governance()?;
-    create_block()?;
-    add_block()?;
-    validate_consensus()?;
-    get_cross_chain_analytics()?;
-    handle_streaming_payments()?;
+    let port = env::var("PORT").unwrap_or_else(|_| "8081".to_string());
+    let address = format!("127.0.0.1:{}", port);
 
-    println!("✅ QuantumFuse SDK Execution Completed!");
+    let dashboard_state = Arc::new(RwLock::new(DashboardState::new()));
+
+    // ✅ Start periodic blockchain data updates
+    let state_clone = dashboard_state.clone();
+    task::spawn(async move {
+        loop {
+            if let Err(e) = update_dashboard_state(state_clone.clone()).await {
+                eprintln!("❌ Error updating dashboard state: {}", e);
+            }
+            sleep(Duration::from_secs(60)).await; // Update every 60 seconds
+        }
+    });
+
+    // ✅ Define API routes
+    let app = Router::new()
+        .route("/metrics/governance", get(get_governance_metrics))
+        .route("/metrics/treasury", get(get_treasury_metrics))
+        .route("/metrics/judiciary", get(get_judiciary_metrics))
+        .route("/metrics/reputation", get(get_reputation_scores))
+        .with_state(dashboard_state);
+
+    println!("📊 On-Chain Analytics API running at http://{}/", address);
+    axum::Server::bind(&address.parse()?)
+        .serve(app.into_make_service())
+        .await?;
+
     Ok(())
+}
+
+/// 🔄 **Periodic Blockchain Data Fetch**
+async fn update_dashboard_state(state: Arc<RwLock<DashboardState>>) -> Result<(), Box<dyn std::error::Error>> {
+    let client = BlockchainClient::connect("https://quantumfuse-node.com").await?; // Example node URL
+
+    // ✅ Fetch live data from the QuantumFuse blockchain
+    let governance_data = client.get_governance_metrics().await?;
+    let treasury_data = client.get_treasury_metrics().await?;
+    let judiciary_data = client.get_judiciary_metrics().await?;
+    let reputation_data = client.get_reputation_scores().await?;
+
+    // ✅ Write data to shared state
+    let mut state = state.write().await;
+    state.governance = governance_data;
+    state.treasury = treasury_data;
+    state.judiciary = judiciary_data;
+    state.reputation = reputation_data;
+
+    println!("✅ Dashboard state updated from blockchain.");
+    Ok(())
+}
+
+/// 🚀 **Governance Analytics**
+async fn get_governance_metrics(State(state): State<Arc<RwLock<DashboardState>>>) -> Json<serde_json::Value> {
+    let state = state.read().await;
+    Json(json!({
+        "active_proposals": state.governance.active_proposals,
+        "votes_cast": state.governance.votes_cast,
+        "reputation_weighted_votes": state.governance.reputation_weighted_votes,
+    }))
+}
+
+/// 💰 **Treasury Analytics**
+async fn get_treasury_metrics(State(state): State<Arc<RwLock<DashboardState>>>) -> Json<serde_json::Value> {
+    let state = state.read().await;
+    Json(json!({
+        "treasury_balance": state.treasury.treasury_balance,
+        "bond_issuance": state.treasury.bond_issuance,
+        "staking_rewards": state.treasury.staking_rewards,
+    }))
+}
+
+/// ⚖️ **Judiciary Analytics**
+async fn get_judiciary_metrics(State(state): State<Arc<RwLock<DashboardState>>>) -> Json<serde_json::Value> {
+    let state = state.read().await;
+    Json(json!({
+        "active_cases": state.judiciary.active_cases,
+        "resolved_cases": state.judiciary.resolved_cases,
+        "avg_resolution_time": state.judiciary.avg_resolution_time,
+    }))
+}
+
+/// 🏆 **Reputation System Analytics**
+async fn get_reputation_scores(State(state): State<Arc<RwLock<DashboardState>>>) -> Json<serde_json::Value> {
+    let state = state.read().await;
+    Json(json!({
+        "top_reputation_users": state.reputation.top_users,
+        "avg_reputation_score": state.reputation.avg_reputation,
+    }))
 }
