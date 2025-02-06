@@ -7,17 +7,49 @@ description = "The QuantumFuse SDK: A comprehensive framework for building decen
 repository = "https://github.com/CreoDAMO/quantumfuse-sdk"
 license = "Apache-2.0"
 
+[workspace]
+members = [
+    "quantumfuse-sdk",
+    "ai-analytics-dashboard",
+    "ai-defi-yield-execution-smart-contract",
+    "ai-defi-yield-optimization",
+    "ai-forecasting-api",
+    "ai-metaverse-economy-dashboard",
+    "ai-metaverse-market-simulation",
+    "ai-metaverse-nft-and-land-valuation",
+    "ai-metaverse-npc-agents",
+    "ai-quantum-governance-system",
+    "ai-treasury-api",
+    "ai-treasury-execution-smart-contract",
+    "ai-treasury-forecasting",
+    "ai-quantum-governance",
+    "block",
+    "blockchain",
+    "consensus-mechanism",
+    "cross-chain-treasury-analytics-api",
+    "qfc-streaming-payments-smart-contract"
+]
+resolver = "2"  # Ensures workspace dependencies resolve correctly
+
+[lib]
+name = "quantumfuse_sdk"
+path = "src/lib.rs"
+
 [dependencies]
-# Core Quantum Blockchain & Smart Contracts
+# 🔹 Blockchain & Smart Contract Integration
 substrate-api-client = "1.16.0"
 cosmwasm-std = "2.2.0"
 ethabi = "18.0.0"
 foundry = "0.3.0"
+ethers = "2.0.14"
+subxt = "0.38.1"
+
+# 🔹 Serialization & Data Handling
 serde = { version = "1.0.217", features = ["derive"] }
 serde_json = "1.0.138"
-ruzstd = "0.8"
+borsh = "1.5.5"
 
-# Quantum & Post-Quantum Cryptography
+# 🔹 Quantum & Post-Quantum Cryptography
 pqcrypto = "0.18.1"
 ed25519-dalek = "2.1.1"
 ring = "0.17.8"
@@ -26,12 +58,12 @@ blake2 = "0.10.6"
 blake3 = "1.5.5"
 rand = { version = "0.8.5", features = ["std"] }
 
-# AI & Machine Learning for Metaverse Intelligence
+# 🔹 AI & Machine Learning for Metaverse Intelligence
 tensorflow = "0.21.0"
 ndarray = "0.16.1"
 rust-bert = "0.23.0"
 
-# Networking & Real-Time Communication
+# 🔹 Networking & Real-Time Communication
 tokio = { version = "1.43.0", features = ["full"] }
 reqwest = { version = "0.12.12", features = ["json"] }
 tokio-tungstenite = "0.20.1"
@@ -41,7 +73,7 @@ axum = { version = "0.8.1", features = ["ws"] }
 hyper = { version = "1.6.0", features = ["full"] }
 tower = "0.5.2"
 
-# Metaverse & 3D Graphics
+# 🔹 Metaverse & 3D Graphics
 bevy = "0.15.1"
 rapier3d = "0.23.0"
 wgpu = "24.0.1"
@@ -49,23 +81,22 @@ glam = "0.29.2"
 nalgebra = "0.33.2"
 gltf = "1.4.1"
 
-# VR & AR Support
+# 🔹 VR & AR Support
 openxr = "0.19.0"
 leptos = "0.7.5"
 web-sys = { version = "0.3.77", features = ["WebSocket"] }
 
-# NFT & Digital Asset Management
+# 🔹 NFT & Digital Asset Management
 ipfs-api = "0.17.0"
-ethers = "2.0.14"
 rust-ipfs = "0.14.1"
 arweave-rs = "0.2.0"
 
-# AI-Powered Governance & Reputation
+# 🔹 AI-Powered Governance & Reputation
 log = "0.4.25"
 env_logger = "0.11.6"
 uuid = "1.12.1"
 
-# Quantum AI Dispute Resolution & Law Enforcement
+# 🔹 Quantum AI Dispute Resolution & Law Enforcement
 ark-std = "0.4.0"
 ark-crypto-primitives = "0.4.0"
 ark-ff = "0.4.0"
@@ -75,9 +106,9 @@ ark-bls12-381 = "0.4.0"
 halo2_proofs = "0.3.0"
 rayon = "1.10.0"
 
-# Audio Processing & System Sound Support
+# 🔹 Audio Processing & System Sound Support
 alsa = "0.9.1"
-alsa-sys = "0.3.1"  # If this is still needed.  Check if alsa depends on it!
+alsa-sys = "0.3.1"
 cpal = "0.15.3"
 rodio = "0.20.1"
 symphonia = { version = "0.5.4", features = ["all"] }
@@ -85,26 +116,37 @@ hound = "3.5.1"
 opus = "0.3.0"
 libsamplerate = "0.1.0"
 
-# WebRTC Integration for Audio Streaming
+# 🔹 WebRTC Integration for Audio Streaming
 webrtc = "0.12.0"
 libdatachannel = "0.2.0"
 
-# Smart Contracts for Music Royalties
-subxt = "0.38.1"
+# 🔹 Performance & Concurrency
+crossbeam = "0.8.4"
+crossbeam-deque = "0.8.6"
+crossbeam-channel = "0.5.14"
+crossbeam-utils = "0.8.21"
+lock_api = "0.4.12"
+memoffset = "0.9.1"
+rayon = "1.10.0"
 
-# Corrected and Updated Dependencies:
-syn = "2.0.98"  # Already updated - keep this!
-crossbeam-deque = "0.8.6" # Updated
-crossbeam-channel = "0.5.14" # Updated
-crossbeam-utils = "0.8.21" # Updated
-safer_owning_ref = "0.5.0" # Replaced owning_ref!
-borsh = "1.5.5"  # Updated
-crossbeam = "0.8.4" # Updated
-lock_api = "0.4.12" # Updated
-memoffset = "0.9.1" # Updated
+# 🔹 WebAssembly & Smart Contract Compilation
+wasm-tools = "1.225.0"
 
-# Replaced Unmaintained Crates:
-derive_more = "2.0.1" # Replaced derivative
-web-time = "1.0.0" # Replaced instant
-wasm-tools = "1.225.0" # Replaced parity-wasm
-manyhow = "0.11.4" # Replaced proc-macro-error
+# 🔹 Procedural Macros & Code Generation
+syn = "2.0.98"
+manyhow = "0.11.4"
+
+# 🔹 Smart Contracts for Music Royalties
+safer_owning_ref = "0.5.0" # Replaced `owning_ref`
+web-time = "1.0.0"         # Replaced `instant`
+
+[build-dependencies]
+cc = "1.0"  # If native code compilation is required
+bindgen = "0.69"  # If you need FFI bindings
+
+[dev-dependencies]
+criterion = "0.5.1"
+
+[features]
+default = []
+wasm = ["web-sys", "wasm-tools"]
