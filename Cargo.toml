@@ -105,6 +105,6 @@ memoffset = "0.9.1" # Updated
 
 # Replaced Unmaintained Crates:
 derive_more = "2.0.1" # Replaced derivative
-web-time = "1.10.0" # Replaced instant
+web-time = "1.0.0" # Replaced instant
 wasm-tools = "1.225.0" # Replaced parity-wasm
 manyhow = "0.11.4" # Replaced proc-macro-error
