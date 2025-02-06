@@ -4,7 +4,7 @@ version = "0.1.0"
 edition = "2021"
 authors = ["CreoDAMO"]
 description = "The QuantumFuse SDK: A comprehensive framework for building decentralized applications on the QuantumFuse Blockchain."
-repository = "https://github.com/CreoDAMO/quantumfuse-sdk"
+repository = "https://github.com/CreoDAMO/quantumfuse-sdk.git"
 license = "Apache-2.0"
 
 [workspace]
