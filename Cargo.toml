@@ -43,6 +43,7 @@ ethabi = "18.0.0"
 foundry = "0.3.0"
 ethers = "2.0.14"
 subxt = "0.38.1"
+web-sys = { version = "0.3.77", features = ["WebSocket"], optional = true } # <--- Optional!
 
 # 🔹 Serialization & Data Handling
 serde = { version = "1.0.217", features = ["derive"] }
@@ -84,7 +85,6 @@ gltf = "1.4.1"
 # 🔹 VR & AR Support
 openxr = "0.19.0"
 leptos = "0.7.5"
-web-sys = { version = "0.3.77", features = ["WebSocket"] }
 
 # 🔹 NFT & Digital Asset Management
 ipfs-api = "0.17.0"
@@ -148,4 +148,4 @@ criterion = "0.5.1"
 
 [features]
 default = []
-wasm = ["web-sys", "wasm-tools"]
+wasm = ["web-sys/WebSocket"]  # <--- Correct feature definition
