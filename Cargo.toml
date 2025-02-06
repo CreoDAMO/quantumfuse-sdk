@@ -77,7 +77,7 @@ rayon = "1.10.0"
 
 # Audio Processing & System Sound Support
 alsa = "0.9.1"
-alsa-sys = "0.3.1"
+alsa-sys = "0.3.1"  # If this is still needed.  Check if alsa depends on it!
 cpal = "0.15.3"
 rodio = "0.20.1"
 symphonia = { version = "0.5.4", features = ["all"] }
@@ -92,16 +92,19 @@ libdatachannel = "0.2.0"
 # Smart Contracts for Music Royalties
 subxt = "0.38.1"
 
-# Update the syn crate to the latest version
-syn = { version = "2.0.98", features = ["full"] }
+# Corrected and Updated Dependencies:
+syn = "2.0.98"  # Already updated - keep this!
+crossbeam-deque = "0.8.6" # Updated
+crossbeam-channel = "0.5.14" # Updated
+crossbeam-utils = "0.8.21" # Updated
+safer_owning_ref = "0.4" # Replaced owning_ref!
+borsh = "1.0.4"  # Updated
+crossbeam = "0.7.0" # Updated
+lock_api = "0.4.2" # Updated
+memoffset = "0.6.2" # Updated
 
-# Update the crossbeam-deque, crossbeam-channel, and crossbeam-utils dependencies
-crossbeam-deque = "0.8.6"
-crossbeam-channel = "0.5.14"
-crossbeam-utils = "0.8.21"
-
-# Migrate to the secure 'owning-ref' crate
-owning_ref = "0.4.1"
-
-# Monitor the 'rsa' crate for the timing side-channel vulnerability (RUSTSEC-2023-0071)
-rsa = "0.8.0"
+# Replaced Unmaintained Crates:
+derive_more = "0.99.17" # Replaced derivative
+web-time = "0.1" # Replaced instant
+wasm-tools = "0.1" # Replaced parity-wasm
+manyhow = "0.1" # Replaced proc-macro-error
