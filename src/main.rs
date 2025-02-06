@@ -1,132 +1,78 @@
-use axum::{routing::get, Router, Json, extract::State};
-use serde::{Serialize, Deserialize};
-use serde_json::json;
-use std::{sync::Arc, time::Duration};
-use tokio::{sync::RwLock, task, time::sleep};
+// ✅ Import all necessary QuantumFuse SDK modules
 use quantumfuse_sdk::{
-    ai::{PolicyAI, DisputeResolver, JudicialAI},
-    finance::DecentralizedGovernanceBonds,
-    did::ReputationSystem,
-    consensus::QuantumConsensus,
-    metrics::{GovernanceMetrics, TreasuryMetrics, JudiciaryMetrics, ReputationMetrics},
-    blockchain::BlockchainClient, // Assuming a client to interact with QuantumFuse blockchain
+    run_ai_analytics_dashboard,
+    deploy_ai_defi_yield_execution_smart_contract,
+    get_defi_yield_optimization_data,
+    optimize_defi_yields,
+    run_ai_execution_speed_benchmarks,
+    get_ai_forecasts,
+    display_metaverse_economy_metrics,
+    simulate_metaverse_market,
+    valuate_metaverse_assets,
+    spawn_metaverse_npc_agents,
+    apply_quantum_governance_rules,
+    get_ai_treasury_data,
+    execute_ai_treasury_operations,
+    forecast_treasury_balance,
+    manage_quantum_governance,
+    create_block,
+    add_block,
+    validate_consensus,
+    get_cross_chain_analytics,
+    handle_streaming_payments,
 };
-use dotenv::dotenv;
-use std::env;
 
-/// 📊 **Dashboard State Struct**
-#[derive(Debug, Serialize, Deserialize)]
-struct DashboardState {
-    governance: GovernanceMetrics,
-    treasury: TreasuryMetrics,
-    judiciary: JudiciaryMetrics,
-    reputation: ReputationMetrics,
-}
+use tokio::task;
+use env_logger;
+use std::error::Error;
+use std::time::Instant;
 
-impl DashboardState {
-    fn new() -> Self {
-        Self {
-            governance: GovernanceMetrics::default(),
-            treasury: TreasuryMetrics::default(),
-            judiciary: JudiciaryMetrics::default(),
-            reputation: ReputationMetrics::default(),
+/// 🚀 **Main entry point**
+#[tokio::main]
+async fn main() -> Result<(), Box<dyn Error>> {
+    // ✅ Initialize logging
+    env_logger::init();
+    println!("🚀 QuantumFuse SDK is starting...");
+
+    // ✅ Start execution timer
+    let start_time = Instant::now();
+
+    // ✅ Run all QuantumFuse SDK functionalities **concurrently**  
+    let results = tokio::join!(
+        task::spawn_blocking(run_ai_analytics_dashboard),
+        task::spawn_blocking(deploy_ai_defi_yield_execution_smart_contract),
+        task::spawn_blocking(get_defi_yield_optimization_data),
+        task::spawn_blocking(optimize_defi_yields),
+        task::spawn_blocking(run_ai_execution_speed_benchmarks),
+        task::spawn_blocking(get_ai_forecasts),
+        task::spawn_blocking(display_metaverse_economy_metrics),
+        task::spawn_blocking(simulate_metaverse_market),
+        task::spawn_blocking(valuate_metaverse_assets),
+        task::spawn_blocking(spawn_metaverse_npc_agents),
+        task::spawn_blocking(apply_quantum_governance_rules),
+        task::spawn_blocking(get_ai_treasury_data),
+        task::spawn_blocking(execute_ai_treasury_operations),
+        task::spawn_blocking(forecast_treasury_balance),
+        task::spawn_blocking(manage_quantum_governance),
+        task::spawn_blocking(create_block),
+        task::spawn_blocking(add_block),
+        task::spawn_blocking(validate_consensus),
+        task::spawn_blocking(get_cross_chain_analytics),
+        task::spawn_blocking(handle_streaming_payments),
+    );
+
+    // ✅ Error handling for async tasks
+    for result in results {
+        match result {
+            Ok(Ok(_)) => {} // Task completed successfully
+            Ok(Err(e)) => eprintln!("❌ Error: {}", e), // Function returned an error
+            Err(e) => eprintln!("⚠️ Task failed: {}", e), // Tokio task failed
         }
     }
-}
 
-#[tokio::main]
-async fn main() -> Result<(), Box<dyn std::error::Error>> {
-    dotenv().ok(); // Load environment variables
-    env_logger::init();
-
-    let port = env::var("PORT").unwrap_or_else(|_| "8081".to_string());
-    let address = format!("127.0.0.1:{}", port);
-
-    let dashboard_state = Arc::new(RwLock::new(DashboardState::new()));
-
-    // ✅ Start periodic blockchain data updates
-    let state_clone = dashboard_state.clone();
-    task::spawn(async move {
-        loop {
-            if let Err(e) = update_dashboard_state(state_clone.clone()).await {
-                eprintln!("❌ Error updating dashboard state: {}", e);
-            }
-            sleep(Duration::from_secs(60)).await; // Update every 60 seconds
-        }
-    });
-
-    // ✅ Define API routes
-    let app = Router::new()
-        .route("/metrics/governance", get(get_governance_metrics))
-        .route("/metrics/treasury", get(get_treasury_metrics))
-        .route("/metrics/judiciary", get(get_judiciary_metrics))
-        .route("/metrics/reputation", get(get_reputation_scores))
-        .with_state(dashboard_state);
-
-    println!("📊 On-Chain Analytics API running at http://{}/", address);
-    axum::Server::bind(&address.parse()?)
-        .serve(app.into_make_service())
-        .await?;
+    // ✅ Execution time tracking
+    let elapsed_time = start_time.elapsed();
+    println!("✅ QuantumFuse SDK Execution Completed in {:.2?}!", elapsed_time);
 
     Ok(())
-}
-
-/// 🔄 **Periodic Blockchain Data Fetch**
-async fn update_dashboard_state(state: Arc<RwLock<DashboardState>>) -> Result<(), Box<dyn std::error::Error>> {
-    let client = BlockchainClient::connect("https://quantumfuse-node.com").await?; // Example node URL
-
-    // ✅ Fetch live data from the QuantumFuse blockchain
-    let governance_data = client.get_governance_metrics().await?;
-    let treasury_data = client.get_treasury_metrics().await?;
-    let judiciary_data = client.get_judiciary_metrics().await?;
-    let reputation_data = client.get_reputation_scores().await?;
-
-    // ✅ Write data to shared state
-    let mut state = state.write().await;
-    state.governance = governance_data;
-    state.treasury = treasury_data;
-    state.judiciary = judiciary_data;
-    state.reputation = reputation_data;
-
-    println!("✅ Dashboard state updated from blockchain.");
-    Ok(())
-}
-
-/// 🚀 **Governance Analytics**
-async fn get_governance_metrics(State(state): State<Arc<RwLock<DashboardState>>>) -> Json<serde_json::Value> {
-    let state = state.read().await;
-    Json(json!({
-        "active_proposals": state.governance.active_proposals,
-        "votes_cast": state.governance.votes_cast,
-        "reputation_weighted_votes": state.governance.reputation_weighted_votes,
-    }))
-}
-
-/// 💰 **Treasury Analytics**
-async fn get_treasury_metrics(State(state): State<Arc<RwLock<DashboardState>>>) -> Json<serde_json::Value> {
-    let state = state.read().await;
-    Json(json!({
-        "treasury_balance": state.treasury.treasury_balance,
-        "bond_issuance": state.treasury.bond_issuance,
-        "staking_rewards": state.treasury.staking_rewards,
-    }))
-}
-
-/// ⚖️ **Judiciary Analytics**
-async fn get_judiciary_metrics(State(state): State<Arc<RwLock<DashboardState>>>) -> Json<serde_json::Value> {
-    let state = state.read().await;
-    Json(json!({
-        "active_cases": state.judiciary.active_cases,
-        "resolved_cases": state.judiciary.resolved_cases,
-        "avg_resolution_time": state.judiciary.avg_resolution_time,
-    }))
-}
-
-/// 🏆 **Reputation System Analytics**
-async fn get_reputation_scores(State(state): State<Arc<RwLock<DashboardState>>>) -> Json<serde_json::Value> {
-    let state = state.read().await;
-    Json(json!({
-        "top_reputation_users": state.reputation.top_users,
-        "avg_reputation_score": state.reputation.avg_reputation,
-    }))
 }
