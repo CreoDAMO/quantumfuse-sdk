@@ -22,17 +22,17 @@ jobs:
     steps:
     # ✅ Checkout repository
     - name: Checkout Code
-      uses: actions/checkout@v4
+      uses: actions/checkout@d9f1347dfa301b11b276e88779be4fd1d7110256 # v4
 
     # ✅ Install Rust Toolchain (Stable)
     - name: Install Rust
-      uses: dtolnay/rust-toolchain@stable
+      uses: dtolnay/rust-toolchain@a53408b26da18e5a78b9d2d1b7b8b394e5d7b59a # stable
       with:
         components: clippy, rustfmt
 
     # ✅ Enable Cargo Caching
     - name: Cache Dependencies
-      uses: Swatinem/rust-cache@v2
+      uses: Swatinem/rust-cache@6f5ef7f9e696163de6a32b8d51c8aefa7ec74f89 # v2
       with:
         cache-on-failure: true
 
@@ -68,9 +68,8 @@ jobs:
       
     # ✅ Commit and push the updated Cargo.lock file
     - name: Commit and Push
-      uses: actions-js/push@master
+      uses: actions-js/push@c65cd883420fd2eb864698a825fc4162dd94482c # v1.1
       with:
         github_token: ${{ secrets.GITHUB_TOKEN }}
         branch: ${{ github.ref }}
         message: 'Update Cargo.lock'
-        
