@@ -87,7 +87,7 @@ libsamplerate = "0.1.0"
 
 # WebRTC Integration for Audio Streaming
 webrtc = "0.12.0"
-libdatachannel = "0.2.0+0.20.1"
+libdatachannel = "0.2.0"
 
 # Smart Contracts for Music Royalties
 subxt = "0.38.1"
