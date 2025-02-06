@@ -94,6 +94,7 @@ subxt = "0.38.1"
 
 # Update the syn crate to the latest version
 syn = "2.0.98"
+features = ["full"]
 
 # Update the crossbeam-deque, crossbeam-channel, and crossbeam-utils dependencies
 crossbeam-deque = "0.8.6"
