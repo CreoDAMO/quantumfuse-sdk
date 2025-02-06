@@ -102,6 +102,7 @@ wasm-tools = "1.225.0"
 manyhow = "0.11.4"
 safer_owning_ref = "0.5.0"
 web-time = "1.0.0"
+web-sys = "0.3.77"
 
 [lib]
 name = "quantumfuse_sdk"
