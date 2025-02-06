@@ -1,4 +1,4 @@
-// ✅ Ensure all modules are properly declared
+// Declare all modules
 pub mod ai_analytics_dashboard;
 pub mod ai_defi_yield_execution_smart_contract;
 pub mod ai_defi_yield_optimization_api;
@@ -18,29 +18,26 @@ pub mod block;
 pub mod blockchain;
 pub mod consensus_mechanism;
 pub mod cross_chain_treasury_analytics_api;
-pub mod cross_chain_treasury_management;
-pub mod cross_platform_audio_handling;
-pub mod did;
-pub mod ipfs_upload;
-pub mod metaverse_analytics_api;
-pub mod music_nft_smart_contract;
 pub mod qfc_streaming_payments_smart_contract;
-pub mod quantum_bridge;
-pub mod quantum_financial_management;
-pub mod quantum_medical_management;
-pub mod quantum_metaverse;
-pub mod quantum_node_and_api;
-pub mod quantum_random_number_generator;
-pub mod quantum_realestate_tokenization;
-pub mod quantum_services;
-pub mod quantum_supplychain_management;
-pub mod quantum_treasury_api;
-pub mod quantum_treasury_smart_contract;
-pub mod quantumfuse_coin;
-pub mod shard;
-pub mod state_manager;
-pub mod tps_benchmarking_and_transaction_processing;
-pub mod transaction;
-pub mod wallet;
-pub mod webrtc;
-pub mod zkp_voting;
+
+// Re-export functions for easier access
+pub use ai_analytics_dashboard::run as run_ai_analytics_dashboard;
+pub use ai_defi_yield_execution_smart_contract::deploy as deploy_ai_defi_yield_execution_smart_contract;
+pub use ai_defi_yield_optimization_api::get_optimization_data as get_defi_yield_optimization_data;
+pub use ai_defi_yield_optimization::optimize_yields as optimize_defi_yields;
+pub use ai_execution_speed_benchmarking::run_benchmarks as run_ai_execution_speed_benchmarks;
+pub use ai_forecasting_api::get_forecasts as get_ai_forecasts;
+pub use ai_metaverse_economy_dashboard::display_metrics as display_metaverse_economy_metrics;
+pub use ai_metaverse_market_simulation::simulate_market as simulate_metaverse_market;
+pub use ai_metaverse_nft_and_land_valuation::valuate_assets as valuate_metaverse_assets;
+pub use ai_metaverse_npc_agents::spawn_agents as spawn_metaverse_npc_agents;
+pub use ai_quantum_governance_system::apply_governance_rules as apply_quantum_governance_rules;
+pub use ai_treasury_api::get_treasury_data as get_ai_treasury_data;
+pub use ai_treasury_execution_smart_contract::execute_treasury_operations as execute_ai_treasury_operations;
+pub use ai_treasury_forecasting::forecast_treasury_balance;
+pub use ai_quantum_governance::manage_quantum_governance;
+pub use block::create_block;
+pub use blockchain::add_block;
+pub use consensus_mechanism::validate_consensus;
+pub use cross_chain_treasury_analytics_api::get_cross_chain_analytics;
+pub use qfc_streaming_payments_smart_contract::handle_streaming_payments;
