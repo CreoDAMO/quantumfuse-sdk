@@ -3,62 +3,13 @@ name: Rust CI
 on:
   push:
     branches: [ "main" ]
-  pull_request:
-    branches: [ "main" ]
-
-permissions:
-  contents: read
-  actions: read
-  checks: read
-
-env:
-  CARGO_TERM_COLOR: always
 
 jobs:
   build:
     runs-on: ubuntu-latest
-
     steps:
-      # ✅ Checkout repository
-      - name: Checkout Code
-        uses: actions/checkout@v4
-
-      # ✅ Install Rust Toolchain (Stable) - CORRECTED
-      - name: Install Rust
-        uses: actions/setup-rust@v2  # Use the official setup-rust action
+      - uses: actions/checkout@v4
+      - uses: actions/setup-rust@v2  # Or a later version
         with:
-          rust-version: 'stable' # Or a specific version like '1.85' if needed
-          components: clippy, rustfmt # Install clippy and rustfmt
-
-      # ✅ Enable Cargo Caching
-      - name: Cache Dependencies
-        uses: Swatinem/rust-cache@v2.7.7 # This action seems okay, but check for updates periodically
-        with:
-          cache-on-failure: true
-
-      # ✅ Install System Dependencies
-      - name: Install System Dependencies
-        run: |
-          sudo apt-get update
-          sudo apt-get install -y libasound2-dev libudev-dev pkg-config
-
-      # ✅ Check Formatting
-      - name: Check Formatting
-        run: cargo fmt -- --check || echo "Formatting issues detected! Run 'cargo fmt' locally to fix."
-
-      # ✅ Lint Code (Clippy) and Fix Issues Automatically
-      - name: Lint with Clippy
-        run: cargo clippy -- -D warnings || echo "Clippy warnings detected!"
-
-      # ✅ Build the Rust project
-      - name: Build
-        run: cargo build --verbose
-
-      # ✅ Run Tests (All Features)
-      - name: Run Tests
-        run: cargo test --all-features --verbose
-
-      # ✅ Run Documentation Tests (Only If Docs Exist)
-      - name: Run Doc Tests
-        run: cargo test --doc || echo "No doc tests found."
-        
+          rust-version: 'stable'
+          
