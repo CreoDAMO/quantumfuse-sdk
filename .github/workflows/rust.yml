@@ -15,47 +15,49 @@ env:
   CARGO_TERM_COLOR: always
 
 jobs:
+
   build:
     runs-on: ubuntu-latest
 
     steps:
-      # ✅ Checkout repository
-      - name: Checkout Code
-        uses: actions/checkout@v4
+    # ✅ Checkout repository
+    - name: Checkout Code
+      uses: actions/checkout@v4
 
-      # ✅ Install Rust Toolchain (Stable)
-      - name: Install Rust
-        uses: dtolnay/rust-toolchain@stable  # ✅ Simplified installation
-        with:
-          components: clippy, rustfmt
+    # ✅ Install Rust Toolchain (Stable)
+    - name: Install Rust
+      uses: dtolnay/rust-toolchain@stable
+      with:
+        components: clippy, rustfmt
 
-      # ✅ Enable Cargo Caching
-      - name: Cache Dependencies
-        uses: Swatinem/rust-cache@v2  # ✅ Better Rust caching
-        with:
-          cache-on-failure: true
+    # ✅ Enable Cargo Caching
+    - name: Cache Dependencies
+      uses: Swatinem/rust-cache@v2.7.7
+      with:
+        cache-on-failure: true
 
-      # ✅ Install System Dependencies
-      - name: Install System Dependencies
-        run: |
-          sudo apt-get update
-          sudo apt-get install -y libasound2-dev libudev-dev pkg-config
-      # ✅ Check Formatting (But Don't Fail Build)
-      - name: Check Formatting
-        run: cargo fmt -- --check || echo "Formatting issues detected! Run 'cargo fmt' locally to fix."
+    # ✅ Install System Dependencies
+    - name: Install System Dependencies
+      run: |
+        sudo apt-get update
+        sudo apt-get install -y libasound2-dev libudev-dev pkg-config
 
-      # ✅ Lint Code (Clippy) and Fix Issues Automatically
-      - name: Lint with Clippy
-        run: cargo clippy -- -D warnings || echo "Clippy warnings detected!"
+    # ✅ Check Formatting (But Don't Fail Build)
+    - name: Check Formatting
+      run: cargo fmt -- --check || echo "Formatting issues detected! Run 'cargo fmt' locally to fix."
 
-      # ✅ Build the Rust project
-      - name: Build
-        run: cargo build --verbose
+    # ✅ Lint Code (Clippy) and Fix Issues Automatically
+    - name: Lint with Clippy
+      run: cargo clippy -- -D warnings || echo "Clippy warnings detected!"
 
-      # ✅ Run Tests (All Features)
-      - name: Run Tests
-        run: cargo test --all-features --verbose
+    # ✅ Build the Rust project
+    - name: Build
+      run: cargo build --verbose
 
-      # ✅ Run Documentation Tests (Only If Docs Exist)
-      - name: Run Doc Tests
-        run: cargo test --doc || echo "No doc tests found."
+    # ✅ Run Tests (All Features)
+    - name: Run Tests
+      run: cargo test --all-features --verbose
+
+    # ✅ Run Documentation Tests (Only If Docs Exist)
+    - name: Run Doc Tests
+      run: cargo test --doc || echo "No doc tests found."
