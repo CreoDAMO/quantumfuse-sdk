@@ -5,7 +5,7 @@ edition = "2021"
 authors = ["CreoDAMO"]
 description = "The QuantumFuse SDK: A comprehensive framework for building decentralized applications on the QuantumFuse Blockchain."
 repository = "https://github.com/CreoDAMO/quantumfuse-sdk"
-license = "Apache 2.0"
+license = "Apache-2.0"
 
 [dependencies]
 # Core Quantum Blockchain & Smart Contracts
@@ -99,3 +99,9 @@ syn = { version = "2.0.98", features = ["full"] }
 crossbeam-deque = "0.8.6"
 crossbeam-channel = "0.5.14"
 crossbeam-utils = "0.8.21"
+
+# Migrate to the secure 'owning-ref' crate
+owning-ref = "0.4.1"
+
+# Monitor the 'rsa' crate for the timing side-channel vulnerability (RUSTSEC-2023-0071)
+rsa = "0.8.0"
