@@ -9,6 +9,7 @@ license = "Apache-2.0"
 
 [workspace]
 members = [
+			"src",
     "ai-analytics-dashboard",
     "ai-defi-yield-execution-smart-contract",
     "ai-defi-yield-optimization",
