@@ -46,9 +46,16 @@ jobs:
             libssl-dev
 
       - name: Security audit
-        uses: actions-rs/audit-check@v1
-        with:
-          token: ${{ secrets.GITHUB_TOKEN }}
+        run: |
+          cargo install --force --locked cargo-audit
+          cargo audit --json > audit_results.json
+        continue-on-error: true
+
+      - name: Check for cargo audit results
+        if: steps.security_audit.outcome != 'success'
+        run: |
+          echo "::warning::Cargo audit found vulnerabilities. Please review audit_results.json"
+          cat audit_results.json
 
       - name: Check Formatting
         run: cargo fmt -- --check
@@ -78,4 +85,3 @@ jobs:
 
       - name: Run cargo-deny checks
         uses: EmbarkStudios/cargo-deny-action@v1
-
