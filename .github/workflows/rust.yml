@@ -15,41 +15,48 @@ env:
   CARGO_TERM_COLOR: always
 
 jobs:
-
   build:
     runs-on: ubuntu-latest
+    fail-fast: true # Optional: Fail the job immediately if any step fails
 
     steps:
-    # ✅ Checkout repository
-    - name: Checkout Code
-      uses: actions/checkout@v4
+      # ✅ Checkout repository
+      - name: Checkout Code
+        uses: actions/checkout@v4
 
-    # ✅ Enable Cargo Caching
-    - name: Cache Dependencies
-      uses: Swatinem/rust-cache@v2.7.7
+      # ✅ Enable Cargo Caching
+      - name: Cache Dependencies
+        uses: Swatinem/rust-cache@v2.7.7
+        with:
+          cache-on-failure: true # Good practice to include this
 
-    # ✅ Install System Dependencies (Including ALSA)
-    - name: Install System Dependencies
-      run: |
-        sudo apt-get update
-        sudo apt-get install -y libasound2-dev libudev-dev pkg-config
+      # ✅ Install System Dependencies (Including ALSA)
+      - name: Install System Dependencies
+        run: |
+          sudo apt-get update
+          sudo apt-get install -y libasound2-dev libudev-dev pkg-config alsa
 
-    # ✅ Check Formatting
-    - name: Check Formatting
-      run: cargo fmt -- --check || echo "Formatting issues detected! Run 'cargo fmt' locally to fix."
+      # ✅ Check Formatting
+      - name: Check Formatting
+        run: cargo fmt -- --check || echo "Formatting issues detected! Run 'cargo fmt' locally to fix."
 
-    # ✅ Lint Code (Clippy) and Fix Issues Automatically
-    - name: Lint with Clippy
-      run: cargo clippy -- -D warnings || echo "Clippy warnings detected!"
+      # ✅ Lint Code (Clippy) and Fix Issues Automatically
+      - name: Lint with Clippy
+        run: cargo clippy -- -D warnings || echo "Clippy warnings detected!"
 
-    # ✅ Build the Rust project
-    - name: Build
-      run: cargo build --verbose
+      # ✅ Build the Rust project
+      - name: Build
+        run: cargo build --verbose
 
-    # ✅ Run Tests (All Features)
-    - name: Run Tests
-      run: cargo test --all-features --verbose
+      # ✅ Run Tests (All Features)
+      - name: Run Tests
+        run: cargo test --all-features --verbose
 
-    # ✅ Run Documentation Tests (Only If Docs Exist)
-    - name: Run Doc Tests
-      run: cargo test --doc || echo "No doc tests found."
+      # ✅ Run Documentation Tests (Only If Docs Exist)
+      - name: Run Doc Tests
+        run: cargo test --doc || echo "No doc tests found."
+
+      # ✅ Check for Future Incompatibilities
+      - name: Check for Future Incompatibilities
+        run: cargo report future-incompatibilities --id 1 || true # Or remove || true if you want the build to fail
+
