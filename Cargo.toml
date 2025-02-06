@@ -29,28 +29,23 @@ members = [
     "cross-chain-treasury-analytics-api",
     "qfc-streaming-payments-smart-contract"
 ]
-resolver = "2"  # Ensures workspace dependencies resolve correctly
+resolver = "2"
 
-[lib]
-name = "quantumfuse_sdk"
-path = "src/lib.rs"
-
-[dependencies]
-# 🔹 Blockchain & Smart Contract Integration
+[workspace.dependencies]
+syn = "2.0.98" # Or latest 2.x version
+anyhow = "1" # For error handling
+tokio = { version = "1", features = ["full"] } # For async runtime
+serde = { version = "1.0", features = ["derive"] }
+serde_json = "1.0"
+axum = "0.7" # Or latest
+dotenv = "0.15"
+env_logger = "0.11"
 substrate-api-client = "1.16.0"
 cosmwasm-std = "2.2.0"
 ethabi = "18.0.0"
 foundry = "0.3.0"
 ethers = "2.0.14"
 subxt = "0.38.1"
-web-sys = { version = "0.3.77", features = ["WebSocket"], optional = true } # <--- Optional!
-
-# 🔹 Serialization & Data Handling
-serde = { version = "1.0.217", features = ["derive"] }
-serde_json = "1.0.138"
-borsh = "1.5.5"
-
-# 🔹 Quantum & Post-Quantum Cryptography
 pqcrypto = "0.18.1"
 ed25519-dalek = "2.1.1"
 ring = "0.17.8"
@@ -58,45 +53,27 @@ base58 = "0.2.0"
 blake2 = "0.10.6"
 blake3 = "1.5.5"
 rand = { version = "0.8.5", features = ["std"] }
-
-# 🔹 AI & Machine Learning for Metaverse Intelligence
 tensorflow = "0.21.0"
 ndarray = "0.16.1"
 rust-bert = "0.23.0"
-
-# 🔹 Networking & Real-Time Communication
-tokio = { version = "1.43.0", features = ["full"] }
 reqwest = { version = "0.12.12", features = ["json"] }
 tokio-tungstenite = "0.20.1"
 tungstenite = "0.21.0"
 warp = "0.3.7"
-axum = { version = "0.8.1", features = ["ws"] }
 hyper = { version = "1.6.0", features = ["full"] }
 tower = "0.5.2"
-
-# 🔹 Metaverse & 3D Graphics
 bevy = "0.15.1"
 rapier3d = "0.23.0"
 wgpu = "24.0.1"
 glam = "0.29.2"
 nalgebra = "0.33.2"
 gltf = "1.4.1"
-
-# 🔹 VR & AR Support
 openxr = "0.19.0"
 leptos = "0.7.5"
-
-# 🔹 NFT & Digital Asset Management
 ipfs-api = "0.17.0"
 rust-ipfs = "0.14.1"
 arweave-rs = "0.2.0"
-
-# 🔹 AI-Powered Governance & Reputation
-log = "0.4.25"
-env_logger = "0.11.6"
 uuid = "1.12.1"
-
-# 🔹 Quantum AI Dispute Resolution & Law Enforcement
 ark-std = "0.4.0"
 ark-crypto-primitives = "0.4.0"
 ark-ff = "0.4.0"
@@ -105,8 +82,6 @@ ark-serialize = "0.4.0"
 ark-bls12-381 = "0.4.0"
 halo2_proofs = "0.3.0"
 rayon = "1.10.0"
-
-# 🔹 Audio Processing & System Sound Support
 alsa = "0.9.1"
 alsa-sys = "0.3.1"
 cpal = "0.15.3"
@@ -115,37 +90,104 @@ symphonia = { version = "0.5.4", features = ["all"] }
 hound = "3.5.1"
 opus = "0.3.0"
 libsamplerate = "0.1.0"
-
-# 🔹 WebRTC Integration for Audio Streaming
 webrtc = "0.12.0"
 libdatachannel = "0.2.0"
-
-# 🔹 Performance & Concurrency
 crossbeam = "0.8.4"
 crossbeam-deque = "0.8.6"
 crossbeam-channel = "0.5.14"
 crossbeam-utils = "0.8.21"
 lock_api = "0.4.12"
 memoffset = "0.9.1"
-
-# 🔹 WebAssembly & Smart Contract Compilation
 wasm-tools = "1.225.0"
-
-# 🔹 Procedural Macros & Code Generation
-syn = "2.0.98"
 manyhow = "0.11.4"
+safer_owning_ref = "0.5.0"
+web-time = "1.0.0"
+web-sys = { version = "0.3.77", features = ["WebSocket"], optional = true }
 
-# 🔹 Smart Contracts for Music Royalties
-safer_owning_ref = "0.5.0" # Replaced `owning_ref`
-web-time = "1.0.0"         # Replaced `instant`
+[lib]
+name = "quantumfuse_sdk"
+path = "src/lib.rs"
+
+[dependencies]
+syn = { workspace = true }
+anyhow = { workspace = true }
+tokio = { workspace = true }
+serde = { workspace = true }
+serde_json = { workspace = true }
+axum = { workspace = true }
+dotenv = { workspace = true }
+env_logger = { workspace = true }
+substrate-api-client = { workspace = true }
+cosmwasm-std = { workspace = true }
+ethabi = { workspace = true }
+foundry = { workspace = true }
+ethers = { workspace = true }
+subxt = { workspace = true }
+pqcrypto = { workspace = true }
+ed25519-dalek = { workspace = true }
+ring = { workspace = true }
+base58 = { workspace = true }
+blake2 = { workspace = true }
+blake3 = { workspace = true }
+rand = { workspace = true }
+tensorflow = { workspace = true }
+ndarray = { workspace = true }
+rust-bert = { workspace = true }
+reqwest = { workspace = true }
+tokio-tungstenite = { workspace = true }
+tungstenite = { workspace = true }
+warp = { workspace = true }
+hyper = { workspace = true }
+tower = { workspace = true }
+bevy = { workspace = true }
+rapier3d = { workspace = true }
+wgpu = { workspace = true }
+glam = { workspace = true }
+nalgebra = { workspace = true }
+gltf = { workspace = true }
+openxr = { workspace = true }
+leptos = { workspace = true }
+ipfs-api = { workspace = true }
+rust-ipfs = { workspace = true }
+arweave-rs = { workspace = true }
+uuid = { workspace = true }
+ark-std = { workspace = true }
+ark-crypto-primitives = { workspace = true }
+ark-ff = { workspace = true }
+ark-groth16 = { workspace = true }
+ark-serialize = { workspace = true }
+ark-bls12-381 = { workspace = true }
+halo2_proofs = { workspace = true }
+rayon = { workspace = true }
+alsa = { workspace = true }
+alsa-sys = { workspace = true }
+cpal = { workspace = true }
+rodio = { workspace = true }
+symphonia = { workspace = true }
+hound = { workspace = true }
+opus = { workspace = true }
+libsamplerate = { workspace = true }
+webrtc = { workspace = true }
+libdatachannel = { workspace = true }
+crossbeam = { workspace = true }
+crossbeam-deque = { workspace = true }
+crossbeam-channel = { workspace = true }
+crossbeam-utils = { workspace = true }
+lock_api = { workspace = true }
+memoffset = { workspace = true }
+wasm-tools = { workspace = true }
+manyhow = { workspace = true }
+safer_owning_ref = { workspace = true }
+web-time = { workspace = true }
+web-sys = { workspace = true }
 
 [build-dependencies]
-cc = "1.0"  # If native code compilation is required
-bindgen = "0.69"  # If you need FFI bindings
+cc = "1.0"
+bindgen = "0.69"
 
 [dev-dependencies]
 criterion = "0.5.1"
 
 [features]
 default = []
-wasm = ["web-sys/WebSocket"]  # <--- Correct feature definition
+wasm = ["web-sys/WebSocket"]
