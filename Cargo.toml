@@ -101,7 +101,7 @@ crossbeam-channel = "0.5.14"
 crossbeam-utils = "0.8.21"
 
 # Migrate to the secure 'owning-ref' crate
-owning-ref = "0.4.1"
+owning_ref = "0.4.1"
 
 # Monitor the 'rsa' crate for the timing side-channel vulnerability (RUSTSEC-2023-0071)
 rsa = "0.8.0"
