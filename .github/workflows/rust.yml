@@ -42,7 +42,7 @@ jobs:
         sudo apt-get update
         sudo apt-get install -y libasound2-dev libudev-dev pkg-config
 
-    # ✅ Check Formatting (But Don't Fail Build)
+    # ✅ Check Formatting
     - name: Check Formatting
       run: cargo fmt -- --check || echo "Formatting issues detected! Run 'cargo fmt' locally to fix."
 
