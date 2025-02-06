@@ -45,10 +45,12 @@ jobs:
     # ✅ Update Cargo.lock
     - name: Update Cargo.lock
       run: |
+        git config --global user.email "github-actions[bot]@users.noreply.github.com"
+        git config --global user.name "GitHub Actions"
         cargo update
         git add Cargo.lock
-        git commit -m "Update Cargo.lock"
-        git push
+        git commit -m "Update Cargo.lock" || echo "No changes to commit"
+        git push || echo "No changes to push"
 
     # ✅ Check Formatting (But Don't Fail Build)
     - name: Check Formatting
@@ -69,3 +71,4 @@ jobs:
     # ✅ Run Documentation Tests (Only If Docs Exist)
     - name: Run Doc Tests
       run: cargo test --doc || echo "No doc tests found."
+      
