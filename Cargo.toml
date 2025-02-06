@@ -127,7 +127,6 @@ crossbeam-channel = "0.5.14"
 crossbeam-utils = "0.8.21"
 lock_api = "0.4.12"
 memoffset = "0.9.1"
-rayon = "1.10.0"
 
 # 🔹 WebAssembly & Smart Contract Compilation
 wasm-tools = "1.225.0"
