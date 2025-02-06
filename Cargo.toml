@@ -8,7 +8,6 @@ repository = "https://github.com/CreoDAMO/quantumfuse-sdk"
 license = "Apache 2.0"
 
 [dependencies]
-
 # Core Quantum Blockchain & Smart Contracts
 substrate-api-client = "1.16.0"
 cosmwasm-std = "2.2.0"
@@ -16,7 +15,7 @@ ethabi = "18.0.0"
 foundry = "0.3.0"
 serde = { version = "1.0.217", features = ["derive"] }
 serde_json = "1.0.138"
-ruzstd = "*"
+ruzstd = "0.8"
 
 # Quantum & Post-Quantum Cryptography
 pqcrypto = "0.18.1"
@@ -76,12 +75,6 @@ ark-bls12-381 = "0.4.0"
 halo2_proofs = "0.3.0"
 rayon = "1.10.0"
 
-# 🔹 New Fixes: Missing Time & Cryptographic Dependencies
-chrono = { version = "0.4.31", features = ["serde"] }
-ark-relations = "0.4.0"
-ark-r1cs-std = "0.4.0"
-ark-snark = "0.4.0"
-
 # Audio Processing & System Sound Support
 alsa = "0.9.1"
 alsa-sys = "0.3.1"
@@ -98,3 +91,6 @@ libdatachannel = "0.2.0+0.20.1"
 
 # Smart Contracts for Music Royalties
 subxt = "0.38.1"
+
+# Update the syn crate to the latest version
+syn = "2.0.98"
