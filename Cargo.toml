@@ -7,9 +7,6 @@ description = "The QuantumFuse SDK: A comprehensive framework for building decen
 repository = "https://github.com/CreoDAMO/quantumfuse-sdk"
 license = "Apache 2.0"
 
-[workspace]
-exclude = ["crates/*"]
-
 [dependencies]
 # Core Quantum Blockchain & Smart Contracts
 substrate-api-client = "1.16.0"
@@ -95,10 +92,8 @@ libdatachannel = "0.2.0"
 # Smart Contracts for Music Royalties
 subxt = "0.38.1"
 
-# Crucial Change: Manage syn and related crates
-syn = { version = "2.0.98", features = ["full"] }
-synstructure = "0.13.1"
-quote = "1.0.33"
+# Update the syn crate to the latest version
+syn = "2.0.98"
 
 # Update the crossbeam-deque, crossbeam-channel, and crossbeam-utils dependencies
 crossbeam-deque = "0.8.6"
