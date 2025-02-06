@@ -10,51 +10,72 @@ permissions:
   contents: read
   actions: read
   checks: read
+  security-events: write # Added for security scanning
 
 env:
   CARGO_TERM_COLOR: always
+  RUSTFLAGS: "-D warnings" # Treat warnings as errors
 
 jobs:
   build:
     runs-on: ubuntu-latest
 
     steps:
-      # ✅ Checkout repository
       - name: Checkout Code
         uses: actions/checkout@v4
 
-      # ✅ Enable Cargo Caching
+      - name: Install Rust toolchain
+        uses: dtolnay/rust-toolchain@stable
+        with:
+          components: rustfmt, clippy
+
       - name: Cache Dependencies
         uses: Swatinem/rust-cache@v2.7.7
         with:
-          cache-on-failure: true # Good practice to include this
+          cache-on-failure: true
+          shared-key: "quantum-sdk"
 
-      # ✅ Install System Dependencies (Including ALSA)
       - name: Install System Dependencies
         run: |
           sudo apt-get update
-          sudo apt-get install -y libasound2-dev libudev-dev pkg-config alsa
+          sudo apt-get install -y --no-install-recommends \
+            libasound2-dev \
+            libudev-dev \
+            pkg-config \
+            alsa \
+            libssl-dev
 
-      # ✅ Check Formatting
+      - name: Security audit
+        uses: actions-rs/audit-check@v1
+        with:
+          token: ${{ secrets.GITHUB_TOKEN }}
+
       - name: Check Formatting
-        run: cargo fmt -- --check || echo "Formatting issues detected! Run 'cargo fmt' locally to fix."
+        run: cargo fmt -- --check
 
-      # ✅ Lint Code (Clippy) and Fix Issues Automatically
       - name: Lint with Clippy
-        run: cargo clippy -- -D warnings || echo "Clippy warnings detected!"
+        run: cargo clippy --all-targets --all-features
 
-      # ✅ Build the Rust project
       - name: Build
-        run: cargo build --verbose
+        run: cargo build --verbose --all-features
 
-      # ✅ Run Tests (All Features)
       - name: Run Tests
         run: cargo test --all-features --verbose
+        env:
+          RUST_BACKTRACE: 1
 
-      # ✅ Run Documentation Tests (Only If Docs Exist)
       - name: Run Doc Tests
-        run: cargo test --doc || echo "No doc tests found."
+        run: cargo test --doc
 
-      # ✅ Check for Future Incompatibilities
       - name: Check for Future Incompatibilities
-        run: cargo report future-incompatibilities --id 1 || true # Or remove || true if you want the build to fail
+        run: cargo report future-incompatibilities --id 1
+
+      - name: Generate Documentation
+        run: cargo doc --no-deps --all-features
+
+      - name: Check for unused dependencies
+        run: cargo udeps || true
+
+      - name: Run cargo-deny checks
+        uses: EmbarkStudios/cargo-deny-action@v1
+
